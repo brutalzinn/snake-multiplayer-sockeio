@@ -1,0 +1,30 @@
+{
+  "name": "JavaScript-Snake",
+  "version": "1.0.0",
+  "dependencies": {
+    "express": "^4.13.4",
+    "nodemon": "^2.0.7",
+    "socket.io": "^1.4.5"
+  },
+  "scripts": {
+    "start": "nodemon app.js"
+  },
+  "description": "A multiplayer JavaScript snake game.",
+  "main": "app.js",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mhsjlw/JavaScript-Snake.git"
+  },
+  "keywords": [
+    "snake",
+    "multiplayer",
+    "socketio"
+  ],
+  "author": "mhsjlw <mhsjlw@aol.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mhsjlw/JavaScript-Snake/issues"
+  },
+  "homepage": "https://github.com/mhsjlw/JavaScript-Snake#readme"
+}
