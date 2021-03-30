@@ -66,6 +66,19 @@ if (window["WebSocket"]) {
       socket.on('snakes', function(snakes) {
         animate(snakes);
       });
+      socket.on('food', function(foods) {
+  
+for(var i =0 ; i< foods.length;i++){
+  console.log('generate food' + JSON.stringify(foods[i]))
+  context.fillStyle = 'rgb(230,230,230)';
+// context.fillRect(foods[i].x * 10, foods[i].y * 10, 9, 9)
+  context.fillRect(foods[i].x * 10, foods[i].y * 10, 9, 9)
+
+}
+
+      });
+   
+
     };
     
     connect();

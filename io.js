@@ -1,6 +1,7 @@
 var Snake = require('./snake');
 var autoClient = 1;
 var snakes = [];
+var foods = []
 
 module.exports = function(io) {
   io.on('connection', function(client) {
@@ -18,6 +19,8 @@ module.exports = function(io) {
     client.on('move', function(direction) {
       clientSnake.direction = direction;
     });
+
+    
   
     client.on('disconnect', function() {
       snakes.remove(clientSnake);
@@ -62,11 +65,17 @@ module.exports = function(io) {
   }
     
   function generateFood() {
-    console.log('generate food')
+    //console.log('generate food')
     var x = Math.floor((Math.random() * 48) + 1);
     var y = Math.floor((Math.random() * 48) + 1);
     
     return {x:x,y:y};
+  }
+  function Food(){
+ 
+    foods.push({x:generateFood().x,y:generateFood().y})
+   
+      io.emit('food', foods);
   }
   
   Array.prototype.remove = function(e) {
@@ -75,6 +84,7 @@ module.exports = function(io) {
       return ([].splice.apply(this, [t, t - t + 1].concat(_ref = [])), _ref);
     }
   };
-  
+  var tickFood = setInterval(Food, 3000);
+
   var tick = setInterval(updateState, 100);
 }
