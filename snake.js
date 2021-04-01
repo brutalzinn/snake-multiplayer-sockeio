@@ -2,7 +2,7 @@
 
 var STAGE_WIDTH = 49;
 var STAGE_HEIGHT = 49;
-var SNAKE_LENGTH = 8;
+var SNAKE_LENGTH = 2;
 
 class Snake {
   constructor(id) {
@@ -10,6 +10,7 @@ class Snake {
     this.reset();
     this.kills = 0;
     this.deaths = 0;
+   
   }
   
   addKill() {
@@ -17,12 +18,25 @@ class Snake {
     this.kills++;
     return this.length = this.elements.unshift([-1,-1]);
   }
+  resetBody() {
+    
+    var i, rH,head;
+    rH = Math.floor(Math.random() * 49);
+    head = this.length - 1;
+    console.log('elementsbefore',this.elements.length)
+    console.log('elementsafter',this.length)
+var difference = this.length - this.elements.length
+for(var i =0;i < difference;i++){
+  this.elements.push([this.elements[this.elements.length - 1][0],this.elements[this.elements.length - 1][1]])
+}
   
+  }
   reset() {
+   
     var i, rH;
     rH = Math.floor(Math.random() * 49);
     this.deaths++;
-    this.length = SNAKE_LENGTH;
+ this.length = SNAKE_LENGTH;
     this.direction = "right";
     return this.elements = (function() {
       var _ref, _results;
@@ -112,7 +126,11 @@ class Snake {
   }
   
   addLength(i) {
-    this.length + i;
+    console.log('####LENGHT',this.length)
+   
+    this.length += i;
+    console.log('snake',i)
+    
   }
   
 }

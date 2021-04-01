@@ -34,9 +34,11 @@ module.exports = function(io) {
     for (_i = 0, _len = snakes.length; _i < _len; _i++) {
       snake = snakes[_i];
       snake.doStep();
+    
     }
+   checkFood()
     checkCollisions();
-    checkFood()
+   
     return io.emit('snakes', snakes);
   };
   function checkFood(){
@@ -46,8 +48,9 @@ module.exports = function(io) {
       snake = snakes[_i];
       for (f = 0; f < foods.length; f++) {
         if(snake.head()[0] == foods[f].x && snake.head()[1] == foods[f].y){
-          console.log(foods[f].type.nutrition)
-          snake.addLength(foods[f].type.nutrition)
+         // console.log(foods[f].type.nutrition)
+       snake.addLength(2)
+    snake.resetBody()
 foods.splice(f,1)
         }
       }
@@ -62,6 +65,7 @@ foods.splice(f,1)
       // if (snake.blocksSelf()) {
       //   resetSnakes.push(snake);
       // }
+   //   snake.addLength(2)
       for (_j = 0, _len2 = snakes.length; _j < _len2; _j++) {
         other = snakes[_j];
         if (other !== snake) {
