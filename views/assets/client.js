@@ -41,15 +41,17 @@ if (window["WebSocket"]) {
       for (_i = 0, _len = snakes.length; _i < _len; _i++) {
      
         snake = snakes[_i];
+        for (f = 0; f < foods.length; f++) {
+          context.fillStyle = foods[f].type.color
+          context.fillRect(foods[f].x * 10, foods[f].y * 10, 9, 9);
+        }
         context.fillStyle = snake.id === id ? 'rgb(170,0,0)' : 'rgb(0,0,0)';
      
         if (snake.id === id) {
           $("#kills").text("Kills: " + snake.kills);
           $("#deaths").text("Deaths: " + snake.deaths);
         }
-        for (f = 0; f < foods.length; f++) {
-          context.fillRect(foods[f].x * 10, foods[f].y * 10, 9, 9);
-        }
+     
         _results.push((function() {
           var _j, _len2, _ref, _results2;
           _ref = snake.elements;
