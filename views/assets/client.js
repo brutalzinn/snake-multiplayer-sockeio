@@ -5,9 +5,9 @@ if (window["WebSocket"]) {
     canvas = $("#stage");
     context = canvas.get(0).getContext("2d");
     id = null;
-    
+    var foods = []
     var socket = io.connect(document.location.href);
-    
+  
     if(socket != null) {
       console.log('connected to server');
     }
@@ -19,27 +19,36 @@ if (window["WebSocket"]) {
      
 
     }
-    
+   
     function animate(snakes) {
-      var element, snake, x, y, _i, _len, _results;
+    
+      var element, snake, x, y,f, _i, _len, _results;
+ 
       context.fillStyle = 'rgb(230,230,230)';
-      
+   
+    
       for (x = 0; x <= 49; x++) {
         for (y = 0; y <= 49; y++) {
+          
           context.fillRect(x * 10, y * 10, 9, 9);
+      
         }
       }
-      
+     
       _results = [];
       console.log('id',id)
+
       for (_i = 0, _len = snakes.length; _i < _len; _i++) {
+     
         snake = snakes[_i];
         context.fillStyle = snake.id === id ? 'rgb(170,0,0)' : 'rgb(0,0,0)';
-   
-        if (snake.id === id) {
      
+        if (snake.id === id) {
           $("#kills").text("Kills: " + snake.kills);
           $("#deaths").text("Deaths: " + snake.deaths);
+        }
+        for (f = 0; f < foods.length; f++) {
+          context.fillRect(foods[f].x * 10, foods[f].y * 10, 9, 9);
         }
         _results.push((function() {
           var _j, _len2, _ref, _results2;
@@ -56,28 +65,26 @@ if (window["WebSocket"]) {
       }
       return _results;
     };
-    
+
     function connect() {
       socket.on('id', function(socket_id) {
         id = socket_id;
         $("#id").text("Id: " + id);
+   
+
       });
       
       socket.on('snakes', function(snakes) {
-        animate(snakes);
-      });
-      socket.on('food', function(foods) {
   
-for(var i =0 ; i< foods.length;i++){
-  console.log('generate food' + JSON.stringify(foods[i]))
-  context.fillStyle = 'rgb(230,230,230)';
-// context.fillRect(foods[i].x * 10, foods[i].y * 10, 9, 9)
-  context.fillRect(foods[i].x * 10, foods[i].y * 10, 9, 9)
-
-}
-
+       animate(snakes);
+      
+           
       });
-   
+      socket.on('food', function(clientfood) {
+        foods = clientfood
+           
+     });
+     
 
     };
     
