@@ -21,7 +21,7 @@ if (window["WebSocket"]) {
     }
    
     function animate(snakes) {
-    
+  
       var element, snake, x, y,f, _i, _len, _results;
  
       context.fillStyle = 'rgb(230,230,230)';
@@ -36,20 +36,22 @@ if (window["WebSocket"]) {
       }
      
       _results = [];
-      console.log('id',id)
+     
 
       for (_i = 0, _len = snakes.length; _i < _len; _i++) {
      
         snake = snakes[_i];
         for (f = 0; f < foods.length; f++) {
-          context.fillStyle = foods[f].type.color
-          context.fillRect(foods[f].x * 10, foods[f].y * 10, 9, 9);
+        console.log('#####food',foods[f])
+        context.fillStyle = foods[f].type.color
+         context.fillRect(foods[f].x * 10, foods[f].y * 10, 9, 9);
         }
         context.fillStyle = snake.id === id ? 'rgb(170,0,0)' : 'rgb(0,0,0)';
      
         if (snake.id === id) {
           $("#kills").text("Kills: " + snake.kills);
           $("#deaths").text("Deaths: " + snake.deaths);
+          $("#points").text("Points: " + snake.length);
         }
      
         _results.push((function() {
@@ -69,6 +71,7 @@ if (window["WebSocket"]) {
     };
 
     function connect() {
+      console.log('test')
       socket.on('id', function(socket_id) {
         id = socket_id;
         $("#id").text("Id: " + id);

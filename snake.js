@@ -10,6 +10,7 @@ class Snake {
     this.reset();
     this.kills = 0;
     this.deaths = 0;
+    this.speed = 7;
    
   }
   
@@ -23,8 +24,6 @@ class Snake {
     var i, rH,head;
     rH = Math.floor(Math.random() * 49);
     head = this.length - 1;
-    console.log('elementsbefore',this.elements.length)
-    console.log('elementsafter',this.length)
 var difference = this.length - this.elements.length
 for(var i =0;i < difference;i++){
   this.elements.push([this.elements[this.elements.length - 1][0],this.elements[this.elements.length - 1][1]])
@@ -126,11 +125,7 @@ for(var i =0;i < difference;i++){
   }
   
   addLength(i) {
-    console.log('####LENGHT',this.length)
-   
     this.length += i;
-    console.log('snake',i)
-    
   }
   
 }

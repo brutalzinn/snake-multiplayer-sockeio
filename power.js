@@ -1,6 +1,4 @@
-var Banana = require('./Foods/Banana');
-var Apple = require('./Foods/Apple');
-class Food{
+class Power{
 constructor(x,y){
 this.x = x
 this.y = y
@@ -17,4 +15,4 @@ this.type = type
 
 
 }
-module.exports = Food;
+module.exports = Power;

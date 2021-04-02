@@ -28,18 +28,29 @@ module.exports = function(io) {
       console.log('someone disconnected (' + clientId + ')');
     });
   });
-  
+ 
   function updateState() {
-    var snake, _i, _len;
+    var snake, _i, _len,n=-1;
     for (_i = 0, _len = snakes.length; _i < _len; _i++) {
       snake = snakes[_i];
-      snake.doStep();
     
-    }
-   checkFood()
+        setTimeout(function(){
+          
+snake.doStep()
+console.log('timeout',100 - (snake.speed * 10))
+        }, 100 - (snake.speed * 10));
+      }
+     
+      // while(n < snake.speed){
+      //   checkFood()
+      //     n++ 
+      //   }
+    
+    checkFood()
     checkCollisions();
-   
-    return io.emit('snakes', snakes);
+    
+   return io.emit('snakes', snakes);
+  //   setTimeout(updateState, 100 - (snake.speed * 10));
   };
   function checkFood(){
     var snake, _i, _len;
@@ -49,7 +60,8 @@ module.exports = function(io) {
       for (f = 0; f < foods.length; f++) {
         if(snake.head()[0] == foods[f].x && snake.head()[1] == foods[f].y){
          // console.log(foods[f].type.nutrition)
-       snake.addLength(2)
+         console.log('geting',foods[f].type.name)
+       snake.addLength(foods[f].type.nutrition)
     snake.resetBody()
 foods.splice(f,1)
         }
@@ -111,5 +123,5 @@ foods.splice(f,1)
   };
 var tickFood = setInterval(getFood, 100);
 
-  var tick = setInterval(updateState, 100);
+var tick = setInterval(function () {updateState()}, 30);
 }
