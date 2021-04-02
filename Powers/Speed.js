@@ -2,7 +2,6 @@ class Speed{
     constructor(){
     this.name = this.getName()
     this.color = this.getColor()
-    this.nutrition = this.getNutrition()
     }
     getName(){
         return 'Speed'
@@ -10,8 +9,13 @@ class Speed{
     getColor(){
         return 'rgb(255,0,102)'
     }
+    setPower(snake){
+       
+        snake.speed += 2 
+        console.log('change speed of snake' + snake.speed)
+    }
     getPower(snake){
-        return 5
+        return snake.speed
     }
     
     }

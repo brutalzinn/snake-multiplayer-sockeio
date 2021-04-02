@@ -10,7 +10,7 @@ class Snake {
     this.reset();
     this.kills = 0;
     this.deaths = 0;
-    this.speed = 7;
+    this.speed = 0;
    
   }
   

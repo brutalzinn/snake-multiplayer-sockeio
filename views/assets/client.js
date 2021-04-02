@@ -5,7 +5,7 @@ if (window["WebSocket"]) {
     canvas = $("#stage");
     context = canvas.get(0).getContext("2d");
     id = null;
-    var foods = []
+    var items = []
     var socket = io.connect(document.location.href);
   
     if(socket != null) {
@@ -41,10 +41,10 @@ if (window["WebSocket"]) {
       for (_i = 0, _len = snakes.length; _i < _len; _i++) {
      
         snake = snakes[_i];
-        for (f = 0; f < foods.length; f++) {
-        console.log('#####food',foods[f])
-        context.fillStyle = foods[f].type.color
-         context.fillRect(foods[f].x * 10, foods[f].y * 10, 9, 9);
+        for (f = 0; f < items.length; f++) {
+        console.log('#####food',items[f])
+        context.fillStyle = items[f].type.color
+         context.fillRect(items[f].x * 10, items[f].y * 10, 9, 9);
         }
         context.fillStyle = snake.id === id ? 'rgb(170,0,0)' : 'rgb(0,0,0)';
      
@@ -85,8 +85,8 @@ if (window["WebSocket"]) {
       
            
       });
-      socket.on('food', function(clientfood) {
-        foods = clientfood
+      socket.on('item', function(clientItem) {
+        items = clientItem
            
      });
      
