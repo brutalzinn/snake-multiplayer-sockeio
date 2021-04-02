@@ -11,7 +11,10 @@ class Speed{
     }
     setPower(snake){
        
-        snake.speed += 2 
+        if(snake.speed > 0){
+            snake.speed -= 10
+        }
+     
         console.log('change speed of snake' + snake.speed)
     }
     getPower(snake){

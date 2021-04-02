@@ -10,10 +10,10 @@ class Snake {
     this.reset();
     this.kills = 0;
     this.deaths = 0;
-    this.speed = 0;
+    this.speed = 100;
    
   }
-  
+
   addKill() {
     console.log('id' + this.id +"|KILL"+this.kills+"|DEATH" + this.deaths)
     this.kills++;
@@ -35,6 +35,7 @@ for(var i =0;i < difference;i++){
     var i, rH;
     rH = Math.floor(Math.random() * 49);
     this.deaths++;
+    this.speed = 100;
  this.length = SNAKE_LENGTH;
     this.direction = "right";
     return this.elements = (function() {
@@ -47,12 +48,15 @@ for(var i =0;i < difference;i++){
     }).call(this);
   }
   
-  doStep() {
+  async doStep() {
+
+    
     var i, _ref;
     for (i = 0, _ref = this.length - 2; 0 <= _ref ? i <= _ref : i >= _ref; 0 <= _ref ? i++ : i--) {
       this.moveTail(i);
     }
-    return this.moveHead();
+     this.moveHead();
+  
   }
   
   moveTail(i) {

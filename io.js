@@ -6,20 +6,26 @@ var autoClient = 1;
 var snakes = [];
 var foods = []
 var powers = []
-
+var asyncThingsToDo = []
 module.exports = function(io) {
   io.on('connection', function(client) {
     var clientId, clientSnake;
     
     clientId = autoClient;
+    
     clientSnake = new Snake(clientId);
+   
     autoClient += 1;
     snakes.push(clientSnake);
-    
+    if(snakes.length == 1){
+      SnakeTestLL()
+      console.log('executado uma vez')
+    }
+ 
     console.log('someone connected (' + clientId + ')');
     
     client.emit('id', clientId);
-
+  
     client.on('move', function(direction) {
       clientSnake.direction = direction;
       
@@ -29,33 +35,51 @@ module.exports = function(io) {
   
     client.on('disconnect', function() {
       snakes.remove(clientSnake);
+      
       console.log('someone disconnected (' + clientId + ')');
     });
   });
- var snakeTest = function(snake){
+ const snakeTest = function(snake,index){
+ // console.time("answer time");
+  
+//console.log(index)
+ //   console.log('speed',snake.id,index,snake.speed)
+     snake.doStep()
+      checkFood()
+      checkPower()
+      checkCollisions()
+    //  console.log('delete',index)
+    asyncThingsToDo.splice(index,1)
+  //console.timeEnd("answer time");
+   
+  setTimeout(SnakeTestLL, snake.speed) 
+    
+  
+//asyncThingsToDo.splice(index,1)
 
-  snake.doStep()
-  checkFood()
-  checkPower()
-  checkCollisions()
+
  }
-  var  updateState = function()  {
-    var snake, _i, _len;
-var reference = ()=>{
-for (_i = 0, _len = snakes.length; _i < _len; _i++) {
-       snake = snakes[_i];
-       snakeTest(snake)
-      
-     // setInterval(reference,100 - (snake.speed * 10))   
-//  setTimeout(snakeTest,100 - (snake.speed * 10),snake)   
+ async function promiseToChangeSnake(snake){
+  
+ return await new Promise(resolve => { setTimeout(snakeTest, 100 - (snake.speed * 10),snake)
+   resolve()})
+}
+ async function delay(ms) {
+  // return await for better async stack trace support in case of errors.
+  return await new Promise(resolve => setTimeout(resolve, ms));
+}
+var SnakeTestLL = ()=>{
+ 
+  var snake, _i, _len;
+  for (_i = 0, _len = snakes.length; _i < _len; _i++) {
+    snake = snakes[_i];
+    asyncThingsToDo.push([snakeTest,snake])
+}
+asyncThingsToDo.map((item, index) => item[0](item[1],index))
 
-     } 
-    }
-//clearTimeout(tracker)
 
-     setInterval(reference,100)   
+}
 
-  };
   function checkPower(){
     var snake, _i, _len;
     for (_i = 0, _len = snakes.length; _i < _len; _i++) {
@@ -129,8 +153,11 @@ foods.splice(f,1)
   
     var clientfood = new Food(generateItem().x,generateItem().y)
     var clientPower = new Power(generateItem().x,generateItem().y)
+    var PowerTest = new Power(25,25)
+   
     if(powers.length < 1){
-      powers.push(clientPower)
+      powers.push(PowerTest)
+     // powers.push(clientPower)
     }
     if(foods.length < 20){
       foods.push(clientfood)
@@ -147,7 +174,13 @@ var item = [...powers,...foods]
     }
   };
 var tickFood = setInterval(getItem, 100);
-//var updateSnakes = setInterval(updateState, 1);
-updateState()
+
+//var ticksnakeModel= setInterval(SnakeTestLL, 100);
+
+
+
+
+
+
 var tick = setInterval(function () { io.emit('snakes', snakes)}, 100);
 }
