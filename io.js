@@ -35,12 +35,17 @@ module.exports = function(io) {
   
     client.on('disconnect', function() {
       snakes.remove(clientSnake);
-      
+      asyncThingsToDo = []
       console.log('someone disconnected (' + clientId + ')');
     });
   });
- const snakeTest = function(snake,index){
- // console.time("answer time");
+  async function delay(ms) {
+    // return await for better async stack trace support in case of errors.
+    return await new Promise(resolve => setTimeout(resolve, ms));
+  }
+ const snakeTest =  function(snake,index){
+  console.time(`RESPONSE TIME request ${index}`)
+setTimeout(()=>{
   
 //console.log(index)
  //   console.log('speed',snake.id,index,snake.speed)
@@ -49,13 +54,10 @@ module.exports = function(io) {
       checkPower()
       checkCollisions()
     //  console.log('delete',index)
-    asyncThingsToDo.splice(index,1)
-  //console.timeEnd("answer time");
-   
-  setTimeout(SnakeTestLL, snake.speed) 
+
     
-  
-//asyncThingsToDo.splice(index,1)
+    console.timeEnd(`RESPONSE TIME request ${index}`)
+  },2000)
 
 
  }
@@ -64,20 +66,20 @@ module.exports = function(io) {
  return await new Promise(resolve => { setTimeout(snakeTest, 100 - (snake.speed * 10),snake)
    resolve()})
 }
- async function delay(ms) {
-  // return await for better async stack trace support in case of errors.
-  return await new Promise(resolve => setTimeout(resolve, ms));
-}
-var SnakeTestLL = ()=>{
+
+const SnakeTestLL = async ()=>{
  
   var snake, _i, _len;
   for (_i = 0, _len = snakes.length; _i < _len; _i++) {
     snake = snakes[_i];
     asyncThingsToDo.push([snakeTest,snake])
 }
-asyncThingsToDo.map((item, index) => item[0](item[1],index))
-
-
+asyncThingsToDo.map(async (item, index) =>  {
+  asyncThingsToDo.splice(index,1)  
+    await item[0](item[1],index)
+ 
+})
+SnakeTestLL()
 }
 
   function checkPower(){
