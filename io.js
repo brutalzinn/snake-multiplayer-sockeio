@@ -17,10 +17,7 @@ module.exports = function(io) {
    
     autoClient += 1;
     snakes.push(clientSnake);
-    if(snakes.length == 1){
-      SnakeTestLL()
-      console.log('executado uma vez')
-    }
+
  
     console.log('someone connected (' + clientId + ')');
     
@@ -39,47 +36,20 @@ module.exports = function(io) {
       console.log('someone disconnected (' + clientId + ')');
     });
   });
-  async function delay(ms) {
-    // return await for better async stack trace support in case of errors.
-    return await new Promise(resolve => setTimeout(resolve, ms));
-  }
- const snakeTest =  function(snake,index){
-  console.time(`RESPONSE TIME request ${index}`)
-setTimeout(()=>{
-  
-//console.log(index)
- //   console.log('speed',snake.id,index,snake.speed)
-     snake.doStep()
-      checkFood()
-      checkPower()
-      checkCollisions()
-    //  console.log('delete',index)
-
-    
-    console.timeEnd(`RESPONSE TIME request ${index}`)
-  },2000)
 
 
- }
- async function promiseToChangeSnake(snake){
-  
- return await new Promise(resolve => { setTimeout(snakeTest, 100 - (snake.speed * 10),snake)
-   resolve()})
-}
 
-const SnakeTestLL = async ()=>{
+  function SnakeMovement(){
  
   var snake, _i, _len;
   for (_i = 0, _len = snakes.length; _i < _len; _i++) {
     snake = snakes[_i];
-    asyncThingsToDo.push([snakeTest,snake])
+    snake.doStep()
+    checkFood()
+    checkPower()
+    checkCollisions()
 }
-asyncThingsToDo.map(async (item, index) =>  {
-  asyncThingsToDo.splice(index,1)  
-    await item[0](item[1],index)
- 
-})
-SnakeTestLL()
+
 }
 
   function checkPower(){
@@ -166,7 +136,7 @@ foods.splice(f,1)
     }
 var item = [...powers,...foods]
 
-  io.emit('item', item);
+  //io.emit('item', item);
   }
   
   Array.prototype.remove = function(e) {
@@ -177,12 +147,7 @@ var item = [...powers,...foods]
   };
 var tickFood = setInterval(getItem, 100);
 
-//var ticksnakeModel= setInterval(SnakeTestLL, 100);
-
-
-
-
-
+var ticksnakeModel= setInterval(SnakeMovement, 100);
 
 var tick = setInterval(function () { io.emit('snakes', snakes)}, 100);
 }

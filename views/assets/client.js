@@ -62,6 +62,7 @@ if (window["WebSocket"]) {
             element = _ref[_j];
             x = element[0] * 10;
             y = element[1] * 10;
+            console.log(x,y)
             _results2.push(context.fillRect(x, y, 9, 9));
           }
           return _results2;

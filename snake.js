@@ -10,7 +10,7 @@ class Snake {
     this.reset();
     this.kills = 0;
     this.deaths = 0;
-    this.speed = 100;
+    this.speed = 1;
    
   }
 
@@ -20,15 +20,10 @@ class Snake {
     return this.length = this.elements.unshift([-1,-1]);
   }
   resetBody() {
-    
-    var i, rH,head;
-    rH = Math.floor(Math.random() * 49);
-    head = this.length - 1;
 var difference = this.length - this.elements.length
 for(var i =0;i < difference;i++){
   this.elements.push([this.elements[this.elements.length - 1][0],this.elements[this.elements.length - 1][1]])
 }
-  
   }
   reset() {
    
@@ -47,38 +42,75 @@ for(var i =0;i < difference;i++){
       return _results;
     }).call(this);
   }
-  
-  async doStep() {
+   speedSnake(i){
+  var diff = this.speed - 1
+    switch (this.direction) {
+      case "left":
+        this.elements[i][0] = this.elements[i + 1][0] - diff
+        this.elements[i][1] = this.elements[i + 1][1]
+        break;
+      case "right":
+      //  this.elements[i][0] += 3;
+      this.elements[i][0] = this.elements[i + 1][0] + diff
+      this.elements[i][1] = this.elements[i + 1][1]
+        break;
+      case "up":
+      //   this.elements[i][1] -= 3;
+   
+    this.elements[i][1] = this.elements[i + 1][1] - diff
+    this.elements[i][0] = this.elements[i + 1][0]
+        break;
+      case "down":
+     this.elements[i][1] = this.elements[i + 1][1] + diff
+     this.elements[i][0] = this.elements[i + 1][0]
+      //  this.elements[i][1] = this.elements[i + 1][1] + 2
+      //   this.elements[i][1] += 3;
+       
+    }
+   
+   // return this.elements[i][1] = this.elements[i + 1][1];
+   
+  }
+   doStep() {
 
     
     var i, _ref;
+    
     for (i = 0, _ref = this.length - 2; 0 <= _ref ? i <= _ref : i >= _ref; 0 <= _ref ? i++ : i--) {
-      this.moveTail(i);
+     // this.moveTail(i);
+      this.speedSnake(i)
     }
-     this.moveHead();
+    this.moveHead();
+    
   
   }
   
   moveTail(i) {
     this.elements[i][0] = this.elements[i + 1][0];
-    return this.elements[i][1] = this.elements[i + 1][1];
+    return this.elements[i][1] = this.elements[i + 1][1] ;
   }
   
   moveHead() {
     var head;
-    head = this.length - 1;
+
+    head = this.length -1;
+ 
     switch (this.direction) {
       case "left":
-        this.elements[head][0] -= 1;
+        this.elements[head][0] -= this.speed;
+      
         break;
       case "right":
-        this.elements[head][0] += 1;
+        this.elements[head][0] += this.speed;
+       
         break;
       case "up":
-        this.elements[head][1] -= 1;
+        this.elements[head][1] -= this.speed;
+        
         break;
       case "down":
-        this.elements[head][1] += 1;
+        this.elements[head][1] += this.speed;
+        
     }
     if (this.elements[head][0] < 0) {
       this.elements[head][0] = STAGE_WIDTH;
@@ -92,6 +124,8 @@ for(var i =0;i < difference;i++){
     if (this.elements[head][1] > STAGE_HEIGHT) {
       return this.elements[head][1] = 0;
     }
+
+  
   }
   
   head() {
