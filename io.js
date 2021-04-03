@@ -1,7 +1,7 @@
 var Snake = require('./snake');
 var Food = require('./food');
 var Power = require('./power');
-
+var SnakeKey = require('./snake_key');
 var autoClient = 1;
 var snakes = [];
 var foods = []
@@ -23,9 +23,12 @@ module.exports = function(io) {
     
     client.emit('id', clientId);
   
-    client.on('move', function(direction) {
+    client.on('direction', function(direction) {
       clientSnake.direction = direction;
-      
+    });
+    client.on('key', function(key) {
+      console.log(key)
+   new SnakeKey(clientSnake,key).Effect()
     });
 
     
@@ -125,10 +128,10 @@ foods.splice(f,1)
   
     var clientfood = new Food(generateItem().x,generateItem().y)
     var clientPower = new Power(generateItem().x,generateItem().y)
-    var PowerTest = new Power(25,25)
+   // var PowerTest = new Power(25,25)
    
     if(powers.length < 1){
-      powers.push(PowerTest)
+    //  powers.push(PowerTest)
      // powers.push(clientPower)
     }
     if(foods.length < 20){
@@ -136,7 +139,7 @@ foods.splice(f,1)
     }
 var item = [...powers,...foods]
 
-  //io.emit('item', item);
+io.emit('item', item);
   }
   
   Array.prototype.remove = function(e) {

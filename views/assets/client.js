@@ -11,13 +11,15 @@ if (window["WebSocket"]) {
     if(socket != null) {
       console.log('connected to server');
     }
-    
+    function sendKey(key) {
+      if (socket) {
+        socket.emit('key', key);
+      }
+    }
     function sendDirection(direction) {
       if (socket) {
-        socket.emit('move', direction);
+        socket.emit('direction', direction);
       }
-     
-
     }
    
     function animate(snakes) {
@@ -62,7 +64,7 @@ if (window["WebSocket"]) {
             element = _ref[_j];
             x = element[0] * 10;
             y = element[1] * 10;
-            console.log(x,y)
+       
             _results2.push(context.fillRect(x, y, 9, 9));
           }
           return _results2;
@@ -72,7 +74,7 @@ if (window["WebSocket"]) {
     };
 
     function connect() {
-      console.log('test')
+   
       socket.on('id', function(socket_id) {
         id = socket_id;
         $("#id").text("Id: " + id);
@@ -96,25 +98,52 @@ if (window["WebSocket"]) {
     
     connect();
     
-    return $(document).keydown(function(event) {
+     $(document).keydown(function(event) {
       var key;
       key = event.keyCode ? event.keyCode : event.which;
       switch (key) {
         case 37:
           console.log('left');
-          return sendDirection("left");
+           sendDirection("left");
+           break
         case 38:
           console.log('up');
-          return sendDirection("up");
+           sendDirection("up");
+           break
         case 39:
           console.log('right');
-          return sendDirection("right");
+           sendDirection("right");
+           break
         case 40:
           console.log('down');
-          return sendDirection("down");
+           sendDirection("down");
+           break
       }
     });
-  });
+  function keyDontNeed(){
+    keys = [40,39,38,37]
+    return keys
+  }
+   $(document).keyup(function(event) {
+    var key;
+    key = event.keyCode ? event.keyCode : event.which;
+
+    if(!keyDontNeed().includes(key)){
+      sendKey([key,"up"]);
+    }
+          
+    })
+     $(document).keydown(function(event) {
+      var key;
+      key = event.keyCode ? event.keyCode : event.which;
+  
+      if(!keyDontNeed().includes(key)){
+            sendKey([key,"down"]);
+      }
+      })
+
+    });
+
 
 } else {
   alert('Your browser does not support websockets, seriously, get with the times.');

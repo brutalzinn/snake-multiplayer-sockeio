@@ -30,9 +30,11 @@ for(var i =0;i < difference;i++){
     var i, rH;
     rH = Math.floor(Math.random() * 49);
     this.deaths++;
-    this.speed = 100;
+    this.speed = 1;
  this.length = SNAKE_LENGTH;
+
     this.direction = "right";
+    this.key = ''
     return this.elements = (function() {
       var _ref, _results;
       _results = [];
@@ -94,23 +96,20 @@ for(var i =0;i < difference;i++){
     var head;
 
     head = this.length -1;
- 
-    switch (this.direction) {
+
+    switch (this.direction) {      
       case "left":
         this.elements[head][0] -= this.speed;
-      
-        break;
+      break
       case "right":
         this.elements[head][0] += this.speed;
-       
         break;
       case "up":
         this.elements[head][1] -= this.speed;
-        
         break;
       case "down":
         this.elements[head][1] += this.speed;
-        
+        break;
     }
     if (this.elements[head][0] < 0) {
       this.elements[head][0] = STAGE_WIDTH;
