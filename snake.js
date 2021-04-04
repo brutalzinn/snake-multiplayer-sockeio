@@ -54,36 +54,16 @@ for(var i =0;i < difference;i++){
     }
     this.moveHead();
    
- console.log('move',this.elements)
+// console.log('move',this.elements)
   }
-  
+   correction(){
+
+  }
   moveTail(i) {
 var diff = this.speed - 1
-var x = this.elements[i + 1][0]
-var y = this.elements[i + 1][1]
-  
-if(this.elements[i][0] > this.elements[i + 1][0] && this.elements[i][1] == this.elements[i + 1][1]){
-x -= diff
-console.log('esquerda')
 
-}
-if(this.elements[i][0] < this.elements[i + 1][0] && this.elements[i][1] == this.elements[i + 1][1]){
-  x += diff
-  console.log('direita')
-}
+console.log(this.elements[i])
 
-if(this.elements[i][1] > this.elements[i + 1][1] && this.elements[i][0] == this.elements[i + 1][0]){
-  y -= diff
-  console.log('cima')
-}
-if(this.elements[i][1] < this.elements[i + 1][1] && this.elements[i][0] == this.elements[i + 1][0]){
-  y += diff
-  console.log('baixo')
-}
-
-
-this.elements[i][1] = y
-this.elements[i][0] = x
 //this.elements.unshift([this.elements[head][0],this.elements[head][1]])
   }
   
