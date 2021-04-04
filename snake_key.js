@@ -1,16 +1,22 @@
 class SnakeKey {
-constructor(snake,key){
+constructor(snake){
 this.snake = snake
-this.key = key
+this.normalSpeed = this.snake.speed
 }
 
-Effect(){
+Effect(key){
 //console.log('afetando cobra', this.snake)
-if(this.key[0] == 32 && this.key[1] == 'down'){
+if(key[0] == 32 && key[1] == 'down'){
    console.log('space rpessionado')
+   if(this.snake.speed != 3){
+    this.snake.speed = 3
+   }
 
 }
-
+if(key[0] == 32 && key[1] == 'up'){
+    console.log('space rpessionado')
+ this.snake.speed =  this.normalSpeed
+ }
 }
 
 

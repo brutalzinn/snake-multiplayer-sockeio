@@ -2,7 +2,7 @@
 
 var STAGE_WIDTH = 49;
 var STAGE_HEIGHT = 49;
-var SNAKE_LENGTH = 2;
+var SNAKE_LENGTH = 5;
 
 class Snake {
   constructor(id) {
@@ -10,7 +10,7 @@ class Snake {
     this.reset();
     this.kills = 0;
     this.deaths = 0;
-    this.speed = 1;
+    this.speed = 2;
    
   }
 
@@ -32,9 +32,8 @@ for(var i =0;i < difference;i++){
     this.deaths++;
     this.speed = 1;
  this.length = SNAKE_LENGTH;
-
+ 
     this.direction = "right";
-    this.key = ''
     return this.elements = (function() {
       var _ref, _results;
       _results = [];
@@ -44,52 +43,48 @@ for(var i =0;i < difference;i++){
       return _results;
     }).call(this);
   }
-   speedSnake(i){
-  var diff = this.speed - 1
-    switch (this.direction) {
-      case "left":
-        this.elements[i][0] = this.elements[i + 1][0] - diff
-        this.elements[i][1] = this.elements[i + 1][1]
-        break;
-      case "right":
-      //  this.elements[i][0] += 3;
-      this.elements[i][0] = this.elements[i + 1][0] + diff
-      this.elements[i][1] = this.elements[i + 1][1]
-        break;
-      case "up":
-      //   this.elements[i][1] -= 3;
-   
-    this.elements[i][1] = this.elements[i + 1][1] - diff
-    this.elements[i][0] = this.elements[i + 1][0]
-        break;
-      case "down":
-     this.elements[i][1] = this.elements[i + 1][1] + diff
-     this.elements[i][0] = this.elements[i + 1][0]
-      //  this.elements[i][1] = this.elements[i + 1][1] + 2
-      //   this.elements[i][1] += 3;
-       
-    }
-   
-   // return this.elements[i][1] = this.elements[i + 1][1];
-   
-  }
    doStep() {
 
     
     var i, _ref;
-    
-    for (i = 0, _ref = this.length - 2; 0 <= _ref ? i <= _ref : i >= _ref; 0 <= _ref ? i++ : i--) {
-     // this.moveTail(i);
-      this.speedSnake(i)
+  
+   
+    for (i = 0, _ref = this.length - 1;i < _ref;i++) {
+    this.moveTail(i);
     }
     this.moveHead();
-    
-  
+   
+ console.log('move',this.elements)
   }
   
   moveTail(i) {
-    this.elements[i][0] = this.elements[i + 1][0];
-    return this.elements[i][1] = this.elements[i + 1][1] ;
+var diff = this.speed - 1
+var x = this.elements[i + 1][0]
+var y = this.elements[i + 1][1]
+  
+if(this.elements[i][0] > this.elements[i + 1][0] && this.elements[i][1] == this.elements[i + 1][1]){
+x -= diff
+console.log('esquerda')
+
+}
+if(this.elements[i][0] < this.elements[i + 1][0] && this.elements[i][1] == this.elements[i + 1][1]){
+  x += diff
+  console.log('direita')
+}
+
+if(this.elements[i][1] > this.elements[i + 1][1] && this.elements[i][0] == this.elements[i + 1][0]){
+  y -= diff
+  console.log('cima')
+}
+if(this.elements[i][1] < this.elements[i + 1][1] && this.elements[i][0] == this.elements[i + 1][0]){
+  y += diff
+  console.log('baixo')
+}
+
+
+this.elements[i][1] = y
+this.elements[i][0] = x
+//this.elements.unshift([this.elements[head][0],this.elements[head][1]])
   }
   
   moveHead() {

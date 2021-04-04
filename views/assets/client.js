@@ -62,10 +62,10 @@ if (window["WebSocket"]) {
           _results2 = [];
           for (_j = 0, _len2 = _ref.length; _j < _len2; _j++) {
             element = _ref[_j];
-            x = element[0] * 10;
-            y = element[1] * 10;
+            x = element[0] * 10
+            y = element[1] *  10
        
-            _results2.push(context.fillRect(x, y, 9, 9));
+            _results2.push(context.fillRect(x, y , 9 , 9 ));
           }
           return _results2;
         })());

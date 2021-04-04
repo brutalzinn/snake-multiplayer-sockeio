@@ -9,12 +9,12 @@ var powers = []
 var asyncThingsToDo = []
 module.exports = function(io) {
   io.on('connection', function(client) {
-    var clientId, clientSnake;
+    var clientId, clientSnake,clientSnakeKey;
     
     clientId = autoClient;
     
     clientSnake = new Snake(clientId);
-   
+    clientSnakeKey = new SnakeKey(clientSnake)
     autoClient += 1;
     snakes.push(clientSnake);
 
@@ -28,7 +28,7 @@ module.exports = function(io) {
     });
     client.on('key', function(key) {
       console.log(key)
-   new SnakeKey(clientSnake,key).Effect()
+      clientSnakeKey.Effect(key)
     });
 
     
@@ -148,7 +148,7 @@ io.emit('item', item);
       return ([].splice.apply(this, [t, t - t + 1].concat(_ref = [])), _ref);
     }
   };
-var tickFood = setInterval(getItem, 100);
+//var tickFood = setInterval(getItem, 100);
 
 var ticksnakeModel= setInterval(SnakeMovement, 100);
 
