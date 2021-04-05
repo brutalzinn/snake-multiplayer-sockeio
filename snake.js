@@ -2,7 +2,7 @@
 
 var STAGE_WIDTH = 49;
 var STAGE_HEIGHT = 49;
-var SNAKE_LENGTH = 5;
+var SNAKE_LENGTH = 20;
 
 class Snake {
   constructor(id) {
@@ -10,7 +10,7 @@ class Snake {
     this.reset();
     this.kills = 0;
     this.deaths = 0;
-    this.speed = 2;
+    this.speed = 1;
    this.coordX = 0
    this.coordY = 0
   }
@@ -47,54 +47,40 @@ for(var i =0;i < difference;i++){
    doStep() {
 
     
-    var i, _ref;
+    var i, _ref,x,y,t;
  
     this.moveHead();
-
-  //  console.log('i',i)
-
-  //console.log('antes',this.elements)
-
-// console.log('direita')
-
-  
     
    // for(var t =  this.speed; t > 0 ;t--){ //2,1
 
-var t = this.elements.length - 1
+ t = this.elements.length - 1
+
     for (i = 0, _ref = this.length - 2; 0 <= _ref ? i <= _ref : i >= _ref; 0 <= _ref ? i++ : i--) {
-     
-// console.log( 'head',this.elements[this.length - 1][0], this.elements[this.length - 1][1])
+       x = this.elements[i][0]
+       y = this.elements[i][1]
+
       if( this.direction == 'right'){
-     this.elements[i][0] =  this.elements[this.length - 1][0] -t  //2*0 2*1 1*0 1*1
-  //  console.log('x head',i,this.elements[this.length - 1][0])
-    this.elements[i][1] = this.elements[i+1][1] 
+x = t
+    console.log( 'right',   this.elements[i][0] ,    this.elements[i][1] )
+
       }
       if( this.direction == 'left'){
-        this.elements[i][0] =  this.elements[this.length - 1][0] +t  //2*0 2*1 1*0 1*1
-      // console.log('x head',i,this.elements[this.length - 1][0])
-       this.elements[i][1] = this.elements[i+1][1] 
+     x = -t
+       console.log( 'left',   this.elements[i][0] ,    this.elements[i][1] )
          }
          if( this.direction == 'up'){
-          this.elements[i][1] =  this.elements[this.length - 1][1] -t  //2*0 2*1 1*0 1*1
-      //   console.log('x head',i,this.elements[this.length - 1][0])
-         this.elements[i][0] = this.elements[i+1][0] 
+      y = -t
+         console.log( 'up',   this.elements[i][0] ,    this.elements[i][1] )
            }
            if( this.direction == 'down'){
-            this.elements[i][1] =  this.elements[this.length - 1][1] +t  //2*0 2*1 1*0 1*1
-         //  console.log('x head',i,this.elements[this.length - 1][0])
-           this.elements[i][0] = this.elements[i+1][0] 
+            y = t
              }
-           
+             this.elements[i][1] = this.elements[i+1][1] + y
+             this.elements[i][0] = this.elements[i+1][0] + x
 
   t--
-
-
-
-            
-
   }
-  console.log('depois',this.elements)
+ // console.log('depois',this.elements)
 }
 
 
