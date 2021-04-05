@@ -8,16 +8,20 @@ var foods = []
 var powers = []
 var asyncThingsToDo = []
 module.exports = function(io) {
+  //var test = new Snake(123123);
+  //test.speed = 0
+ // snakes.push(test);
   io.on('connection', function(client) {
     var clientId, clientSnake,clientSnakeKey;
     
     clientId = autoClient;
     
     clientSnake = new Snake(clientId);
+   
     clientSnakeKey = new SnakeKey(clientSnake)
     autoClient += 1;
     snakes.push(clientSnake);
-
+   
  
     console.log('someone connected (' + clientId + ')');
     

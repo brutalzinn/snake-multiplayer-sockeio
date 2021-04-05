@@ -11,7 +11,8 @@ class Snake {
     this.kills = 0;
     this.deaths = 0;
     this.speed = 2;
-   
+   this.coordX = 0
+   this.coordY = 0
   }
 
   addKill() {
@@ -47,56 +48,115 @@ for(var i =0;i < difference;i++){
 
     
     var i, _ref;
-  
-   
-    for (i = 0, _ref = this.length - 1;i < _ref;i++) {
-    this.moveTail(i);
-    }
+ 
     this.moveHead();
-   
-// console.log('move',this.elements)
-  }
-   correction(){
+
+  //  console.log('i',i)
+
+  //console.log('antes',this.elements)
+
+// console.log('direita')
+
+  
+    
+   // for(var t =  this.speed; t > 0 ;t--){ //2,1
+
+var t = this.elements.length - 1
+    for (i = 0, _ref = this.length - 2; 0 <= _ref ? i <= _ref : i >= _ref; 0 <= _ref ? i++ : i--) {
+     
+// console.log( 'head',this.elements[this.length - 1][0], this.elements[this.length - 1][1])
+      if( this.direction == 'right'){
+     this.elements[i][0] =  this.elements[this.length - 1][0] -t  //2*0 2*1 1*0 1*1
+  //  console.log('x head',i,this.elements[this.length - 1][0])
+    this.elements[i][1] = this.elements[i+1][1] 
+      }
+      if( this.direction == 'left'){
+        this.elements[i][0] =  this.elements[this.length - 1][0] +t  //2*0 2*1 1*0 1*1
+      // console.log('x head',i,this.elements[this.length - 1][0])
+       this.elements[i][1] = this.elements[i+1][1] 
+         }
+         if( this.direction == 'up'){
+          this.elements[i][1] =  this.elements[this.length - 1][1] -t  //2*0 2*1 1*0 1*1
+      //   console.log('x head',i,this.elements[this.length - 1][0])
+         this.elements[i][0] = this.elements[i+1][0] 
+           }
+           if( this.direction == 'down'){
+            this.elements[i][1] =  this.elements[this.length - 1][1] +t  //2*0 2*1 1*0 1*1
+         //  console.log('x head',i,this.elements[this.length - 1][0])
+           this.elements[i][0] = this.elements[i+1][0] 
+             }
+           
+
+  t--
+
+
+
+            
 
   }
-  moveTail(i) {
-var diff = this.speed - 1
+  console.log('depois',this.elements)
+}
 
-console.log(this.elements[i])
 
-//this.elements.unshift([this.elements[head][0],this.elements[head][1]])
-  }
+
+
+  
   
   moveHead() {
     var head;
-
+    var diff 
+    diff =  this.speed - 1
     head = this.length -1;
-
     switch (this.direction) {      
       case "left":
+       // if( this.elements[head][0] === 0 ){
         this.elements[head][0] -= this.speed;
+        this.coordX = 'esquerda'
+      //  this.elements[head][1] = 0
+     //   }
       break
       case "right":
+      //  if( this.elements[head][0] === 0 ){
         this.elements[head][0] += this.speed;
+        this.coordX = 'direita'
+      //  this.elements[head][1] = 0
+     //   }
         break;
       case "up":
+     //   if( this.elements[head][1] === 0 ){
+      //  this.elements[head][0] = 0
         this.elements[head][1] -= this.speed;
+        this.coordY = 'cima'
+      //  }
+   
         break;
       case "down":
+     //   if( this.elements[head][1] === 0 ){
+       // this.elements[head][0] = 0
         this.elements[head][1] += this.speed;
+        this.coordY = 'baixo'
+      //  }
+     
         break;
+   
     }
+
+//console.log(this.coordX,this.coordY)
     if (this.elements[head][0] < 0) {
       this.elements[head][0] = STAGE_WIDTH;
+      
     }
     if (this.elements[head][1] < 0) {
       this.elements[head][1] = STAGE_HEIGHT;
+ 
     }
     if (this.elements[head][0] > STAGE_WIDTH) {
       this.elements[head][0] = 0;
+ 
     }
     if (this.elements[head][1] > STAGE_HEIGHT) {
-      return this.elements[head][1] = 0;
+       this.elements[head][1] = 0;
+
     }
 
   

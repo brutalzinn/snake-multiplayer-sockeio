@@ -4,6 +4,7 @@ if (window["WebSocket"]) {
     var animate, canvas, connect, context, id, sendDirection;
     canvas = $("#stage");
     context = canvas.get(0).getContext("2d");
+
     id = null;
     var items = []
     var socket = io.connect(document.location.href);
@@ -25,14 +26,14 @@ if (window["WebSocket"]) {
     function animate(snakes) {
   
       var element, snake, x, y,f, _i, _len, _results;
- 
+
       context.fillStyle = 'rgb(230,230,230)';
    
     
       for (x = 0; x <= 49; x++) {
         for (y = 0; y <= 49; y++) {
           
-          context.fillRect(x * 10, y * 10, 9, 9);
+          context.fillRect(x *10 , y * 10 , 9, 9);
       
         }
       }
@@ -57,15 +58,23 @@ if (window["WebSocket"]) {
         }
      
         _results.push((function() {
-          var _j, _len2, _ref, _results2;
+          var _j, _len2, _ref, _results2,diff;
           _ref = snake.elements;
+        diff = snake.speed - 1
+       
           _results2 = [];
           for (_j = 0, _len2 = _ref.length; _j < _len2; _j++) {
+          
             element = _ref[_j];
             x = element[0] * 10
-            y = element[1] *  10
-       
+            y = element[1] * 10
+        
+    //        console.log('pre',element[0]  * 10,diff * 10 )
+  //console.log(x,y )
             _results2.push(context.fillRect(x, y , 9 , 9 ));
+          
+
+           
           }
           return _results2;
         })());
