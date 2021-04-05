@@ -10,7 +10,7 @@ class Snake {
     this.reset();
     this.kills = 0;
     this.deaths = 0;
-    this.speed = 1;
+    this.speed = 2;
    this.coordX = 0
    this.coordY = 0
   }
@@ -45,46 +45,19 @@ for(var i =0;i < difference;i++){
     }).call(this);
   }
    doStep() {
-
-    
     var i, _ref,x,y,t;
- 
-    this.moveHead();
-    
-   // for(var t =  this.speed; t > 0 ;t--){ //2,1
-
  t = this.elements.length - 1
-
+ 
     for (_ref = this.length - 2,i = _ref;i >= 0; i--) {
 
 
-      if( this.direction == 'right'){
-        this.elements[i][1] = this.elements[i+1][1]
-        this.elements[i][0] =   this.elements[i+1][0] + 1
-      }
-      if( this.direction == 'left'){
-        this.elements[i][1] = this.elements[i+1][1]
-        this.elements[i][0] =   this.elements[i+1][0] -1
-         }
-         if( this.direction == 'up'){
-          this.elements[i][1] = this.elements[i+1][1] - 1
-          this.elements[i][0] =   this.elements[i+1][0] 
-           }
-           if( this.direction == 'down'){
-            this.elements[i][1] = this.elements[i+1][1] + 1
-            this.elements[i][0] =   this.elements[i+1][0] 
-        
-           }
-           console.log(i,t)
-       
-
-           if(t>0){
-  t--
-}
-  
-
+      this.elements[i][1] = this.elements[i+1][1] 
+      
+         this.elements[i][0] = this.elements[i+1][0] -1 
+         console.log('for',this.length - 1,this.elements[this.length - 1][0],this.elements[this.length - 1][1])
   }
- console.log('depois',this.elements)
+  this.moveHead();
+// console.log('depois',this.elements)
 }
 
 

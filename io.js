@@ -15,11 +15,14 @@ module.exports = function(io) {
     var clientId, clientSnake,clientSnakeKey;
     
     clientId = autoClient;
-    
+    if(snakes.length > 1){
+      return
+    }
     clientSnake = new Snake(clientId);
    
     clientSnakeKey = new SnakeKey(clientSnake)
     autoClient += 1;
+
     snakes.push(clientSnake);
    
  
