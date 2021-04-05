@@ -2,7 +2,7 @@
 
 var STAGE_WIDTH = 49;
 var STAGE_HEIGHT = 49;
-var SNAKE_LENGTH = 20;
+var SNAKE_LENGTH = 5;
 
 class Snake {
   constructor(id) {
@@ -55,32 +55,36 @@ for(var i =0;i < difference;i++){
 
  t = this.elements.length - 1
 
-    for (i = 0, _ref = this.length - 2; 0 <= _ref ? i <= _ref : i >= _ref; 0 <= _ref ? i++ : i--) {
-       x = this.elements[i][0]
-       y = this.elements[i][1]
+    for (_ref = this.length - 2,i = _ref;i >= 0; i--) {
+
 
       if( this.direction == 'right'){
-x = t
-    console.log( 'right',   this.elements[i][0] ,    this.elements[i][1] )
-
+        this.elements[i][1] = this.elements[i+1][1]
+        this.elements[i][0] =   this.elements[i+1][0] + 1
       }
       if( this.direction == 'left'){
-     x = -t
-       console.log( 'left',   this.elements[i][0] ,    this.elements[i][1] )
+        this.elements[i][1] = this.elements[i+1][1]
+        this.elements[i][0] =   this.elements[i+1][0] -1
          }
          if( this.direction == 'up'){
-      y = -t
-         console.log( 'up',   this.elements[i][0] ,    this.elements[i][1] )
+          this.elements[i][1] = this.elements[i+1][1] - 1
+          this.elements[i][0] =   this.elements[i+1][0] 
            }
            if( this.direction == 'down'){
-            y = t
-             }
-             this.elements[i][1] = this.elements[i+1][1] + y
-             this.elements[i][0] = this.elements[i+1][0] + x
+            this.elements[i][1] = this.elements[i+1][1] + 1
+            this.elements[i][0] =   this.elements[i+1][0] 
+        
+           }
+           console.log(i,t)
+       
 
+           if(t>0){
   t--
+}
+  
+
   }
- // console.log('depois',this.elements)
+ console.log('depois',this.elements)
 }
 
 
