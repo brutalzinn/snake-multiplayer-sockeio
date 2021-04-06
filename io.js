@@ -43,7 +43,7 @@ function game() {
         //console.log("loop: " + counter);
         update_snakes();
         check_all_intersect();
-        create_food(0, 0, 9000, 9000, 4);
+        create_food(0, 0, 5000, 5000, 4);
 
 //console.log(snakes)
         //send new state
@@ -137,24 +137,47 @@ function check_all_intersect() {
 ////////////////////
 
 var g = false;
+var botid = 999
 
+function createBot(){
+  
+    var test = new Snake(botid,10, 100, 30, 10);
+    test.speed = 5
+  
+    test.length = 10
+    test.angle = 0
+    test.color = 'black'
+  
+
+
+}
+function removeBot(){
+   
+    for(var i =0; i < snakes.length ;i++){
+        if(snakes[i] && snakes[i].id == botid){
+        snakes.splice(i,1)
+        }
+     }
+}
 
 io.on('connection',function(socket) {
         var clientId, clientSnake
        
         clientId = autoClient
-     
+       
             clientSnake = new Snake(clientId,10, clientId* 100, 30, 10);
+            
             snakes.push(clientSnake)
           //  console.log(snakes.length,autoClient)
             socket.emit('id', clientId)
+            createBot()
             autoClient++;
         if (!g) {
             g = true;
           
             game();
         }
-
+      
         socket.on('angle', function(msg) {
             //lag
             setTimeout(function() {
@@ -167,17 +190,11 @@ io.on('connection',function(socket) {
         });
 
         socket.on('mouse', function(msg) {
-
             if(msg == 'down'){
                clientSnake.speed = 8;
             }else{
                clientSnake.speed = 5;
             }
-            //lag
-            //setTimeout(function(){
-       //     console.log('speed Received from ', socket.id, ': ', msg);
-            
-            //}, 100);
         });
         socket.on('disconnect', function() {
           //  console.log('disconnect', clientSnake)
@@ -191,7 +208,7 @@ io.on('connection',function(socket) {
                 }
              
              }
-    
+             removeBot()
    
         });
        
