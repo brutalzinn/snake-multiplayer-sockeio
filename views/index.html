@@ -24,6 +24,8 @@
     <canvas id="myCanvas"></canvas>
     <div id="overlay">
         <span id="id">Id: 0</span> - 
+        <span id="kills">Kills: 0</span>
+
         <span id="points">Points: 0</span>
         <span id="coords">Coords: 0</span>
         <ul id="snakeboard">
@@ -199,9 +201,15 @@
             render(o);
         });
             function updateScoreboard(snakes){
+           
+           
                var scores = ''
+
+              
+               $( "#kills" ).text(`Kills:${snakes[myid].kills}`)
+
                 for(var s = 0; s < snakes.length; s++){
-                   scores += `<li>${snakes.name}-${snakes.length}</li><br>`;
+                   scores += `<li>${snakes[s].name}-${snakes[s].length}</li><br>`;
                 }
               
                 $( "#snakeboard" ).html(scores)
@@ -221,6 +229,7 @@
       
       //send "go fast" to server
       canvas.addEventListener('mousedown', function(e) {
+      
        iosocket.emit('mouse', 'down');
       }, false);
       

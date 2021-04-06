@@ -2,6 +2,7 @@ var Snake = require('./snake');
 var SnakeBot = require('./snakeBot');
 var snakes = [];
 var clients = []
+var maxFood = 200
 var autoClient = 0;
 module.exports = function(io) {
   
@@ -22,7 +23,13 @@ var food = [];
 function create_food(minx, miny, maxx, maxy, size) {
     var x = Math.floor(Math.random() * (maxx - minx + 1) + minx);
     var y = Math.floor(Math.random() * (maxy - miny + 1) + miny);
-    food.push([x, y, size])
+    if(food.length < maxFood){
+        food.push([x, y, size])
+    }else{
+        foods = []
+        food.push([x, y, size])
+    }
+  
 }
 
 ///////////
@@ -44,6 +51,7 @@ function game() {
         //console.log("loop: " + counter);
         update_snakes();
         check_all_intersect();
+
         create_food(0, 0, 5000, 5000, 4);
 
 //console.log(snakes)
@@ -63,6 +71,16 @@ function game() {
 }
 
 // helper function to game that handles all intersects
+function respawnSnake(i){
+var snake = snakes[i]
+var maxx = 10
+var minx = 1
+snake.length = 10
+snake.size = 10
+snake.headX = Math.random() * (maxx - minx + 1) + minx
+snake.headY =  Math.random() * (maxx - minx + 1) + minx
+snake.deaths += 1
+}
 function check_all_intersect() {
     for (var i = 0; i < snakes.length; i++) {
         if (snakes[i]) {
@@ -78,7 +96,9 @@ function check_all_intersect() {
             //die if collide with snake
             if (intersect_snakes(i)) {
                 spawnFoodOnDeadSnake(i);
-                snakes[i] = null;
+               respawnSnake(i)
+           
+               // snakes.splice(i,1)
             }
         }
     }
@@ -111,6 +131,7 @@ function check_all_intersect() {
             if (snakes[i] && i != s) {
                 for (var c = 0; c < snakes[i].circles.length; c++) {
                     if (intersect(X, Y, thisSnake.size, snakes[i].circles[c][0], snakes[i].circles[c][1], snakes[i].size)) {
+                     snakes[i].kills += 1
                         return true;
                     }
                 }
@@ -138,14 +159,14 @@ function check_all_intersect() {
 ////////////////////
 
 var g = false;
-var botid = 999
+var botid = 3432
 
 function createBot(){
   
     var test = new SnakeBot(botid,10, 100* 2, 30, 10);
   test.speed = 5
-    test.color = 'black'
- 
+    test.color = 'white'
+ test.name = 'bot-sinistro'
 snakes.push(test)
 
   
@@ -160,20 +181,20 @@ function removeBot(){
 }
 
 io.on('connection',function(socket) {
-        var clientId, clientSnake
+        var clientId, interval, clientSnake
        
         clientId = autoClient
        
-            clientSnake = new Snake(clientId,10, clientId* 100, 30, 10);
-            
+            clientSnake = new Snake(clientId,10, clientId* 100, 30, 50);
+            clientSnake.name = 'robertocpaes'
             snakes.push(clientSnake)
           //  console.log(snakes.length,autoClient)
             socket.emit('id', clientId)
-            createBot()
+   
             autoClient++;
         if (!g) {
             g = true;
-          
+          //  createBot()
             game();
         }
       
@@ -187,13 +208,25 @@ io.on('connection',function(socket) {
                 }
             }, 50);
         });
-
+   function doSnakeSpeed(){
+    clientSnake.length -= 1
+   clientSnake.circles.shift();
+   }
+        var ismouseDown = 0; 
         socket.on('mouse', function(msg) {
             if(msg == 'down'){
-               clientSnake.speed = 8;
+               if(ismouseDown == 0 ){
+                clientSnake.speed = 8;
+                ismouseDown = setInterval(doSnakeSpeed, 250)
+               }
             }else{
+                if(ismouseDown!=0) {  
+                    clearInterval(ismouseDown);
+                    ismouseDown=0;
+                  }
                clientSnake.speed = 5;
             }
+         
         });
         socket.on('disconnect', function() {
           //  console.log('disconnect', clientSnake)
@@ -208,7 +241,7 @@ io.on('connection',function(socket) {
              
              }
           
-             removeBot()
+           //  removeBot()
    
         });
        

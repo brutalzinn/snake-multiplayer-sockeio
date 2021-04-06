@@ -11,6 +11,8 @@ class Snake {
     this.speed = 5;
     this.color = 'pink'
     this.name = _id
+    this.kills = 0
+    this.deaths = 0
   }
 
   update = function(speed) {
