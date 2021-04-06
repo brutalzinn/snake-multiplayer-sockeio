@@ -10,9 +10,8 @@ class Snake {
     this.reset();
     this.kills = 0;
     this.deaths = 0;
-    this.speed = 2;
-   this.coordX = 0
-   this.coordY = 0
+    this.speed = 2.5;
+    this.angle = 0;
   }
 
   addKill() {
@@ -46,17 +45,26 @@ for(var i =0;i < difference;i++){
   }
    doStep() {
     var i, _ref,x,y,t;
- t = this.elements.length - 1
- 
-    for (_ref = this.length - 2,i = _ref;i >= 0; i--) {
+ t = 1
 
-
-      this.elements[i][1] = this.elements[i+1][1] 
-      
-         this.elements[i][0] = this.elements[i+1][0] -1 
-         console.log('for',this.length - 1,this.elements[this.length - 1][0],this.elements[this.length - 1][1])
-  }
+  // for (_ref = this.length - 2,i = _ref;i >= 0; i--) {
+      for (_ref = this.length - 2,i = 0;i <= _ref; i++) {
+  
+    
+    var head = this.elements[this.length - 1]
+  
+    
+     this.elements[i][0] = this.elements[i+1][0] 
+     
+     this.elements[i][1] = this.elements[i+1][1] 
+        // this.elements.unshift(this.elements[this.length - 1]);
+      console.log(i,t,head[0] - t)
+    //console.log('for',this.length - 1,this.elements[this.length - 1][0],this.elements[this.length - 1][1])
+ t++
+      }
+  console.log(this.elements)
   this.moveHead();
+
 // console.log('depois',this.elements)
 }
 
@@ -70,41 +78,45 @@ for(var i =0;i < difference;i++){
     var diff 
     diff =  this.speed - 1
     head = this.length -1;
+    
     switch (this.direction) {      
       case "left":
        // if( this.elements[head][0] === 0 ){
-        this.elements[head][0] -= this.speed;
-        this.coordX = 'esquerda'
+        this.elements[head][0] -= 1 *this.speed;
+      console.log( this.speed * Math.cos(this.angle))
       //  this.elements[head][1] = 0
      //   }
       break
       case "right":
       //  if( this.elements[head][0] === 0 ){
-        this.elements[head][0] += this.speed;
-        this.coordX = 'direita'
+        //this.elements[head][0] += this.speed;
+        this.elements[head][0] += 1 * this.speed  ;
+
       //  this.elements[head][1] = 0
      //   }
         break;
       case "up":
      //   if( this.elements[head][1] === 0 ){
       //  this.elements[head][0] = 0
-        this.elements[head][1] -= this.speed;
-        this.coordY = 'cima'
+        ///this.elements[head][1] -= this.speed;
+        this.elements[head][1] -= 1 * this.speed  ;
       //  }
    
         break;
       case "down":
      //   if( this.elements[head][1] === 0 ){
        // this.elements[head][0] = 0
-        this.elements[head][1] += this.speed;
-        this.coordY = 'baixo'
+       this.elements[head][1] += 1 * this.speed  ;
+
+     //   this.elements[head][1] += this.speed;
+   
       //  }
      
         break;
    
     }
-
-//console.log(this.coordX,this.coordY)
+ 
+////console.log(this.coordX,this.coordY)
     if (this.elements[head][0] < 0) {
       this.elements[head][0] = STAGE_WIDTH;
       
