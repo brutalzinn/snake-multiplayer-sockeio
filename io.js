@@ -1,4 +1,5 @@
 var Snake = require('./snake');
+var SnakeBot = require('./snakeBot');
 var snakes = [];
 var clients = []
 var autoClient = 0;
@@ -141,15 +142,13 @@ var botid = 999
 
 function createBot(){
   
-    var test = new Snake(botid,10, 100, 30, 10);
-    test.speed = 5
-  
-    test.length = 10
-    test.angle = 0
+    var test = new SnakeBot(botid,10, 100* 2, 30, 10);
+  test.speed = 5
     test.color = 'black'
+ 
+snakes.push(test)
+
   
-
-
 }
 function removeBot(){
    
