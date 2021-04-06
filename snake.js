@@ -9,6 +9,7 @@ class Snake {
     this.circles = [];
     this.angle = 0;
     this.speed = 5;
+    this.color = 'pink'
   }
 
   update = function(speed) {

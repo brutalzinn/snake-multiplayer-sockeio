@@ -38,16 +38,16 @@ function game() {
 
     function loop() {
         counter++;
-        console.log("loop: " + counter);
+        //console.log("loop: " + counter);
         update_snakes();
         check_all_intersect();
-        create_food(0, 0, 1000, 1000, 4);
+        create_food(0, 0, 9000, 9000, 4);
 
 
         //send new state
         io.sockets.emit('state', [snakes, food]);
     }
-    var fps = 20;
+    var fps = 30;
     setInterval(loop, 1000 / fps);
     
     function update_snakes() {
@@ -139,9 +139,11 @@ io.on('connection',
     function(socket) {
 
         idmapping[socket.id] = nextID;
+        console.log(idmapping)
         socket.emit('id', nextID);
         nextID += 1;
         snakes[idmapping[socket.id]] = new Snake(10, idmapping[socket.id] * 100, 30, 10);
+
         if (!g) {
             g = true;
             game();
@@ -151,19 +153,33 @@ io.on('connection',
             //lag
             setTimeout(function() {
                 if (snakes[idmapping[socket.id]]) {
-                    console.log('Message Received from ', socket.id, ': ', msg);
+                   // console.log('Message Received from ', socket.id, ': ', msg);
                     snakes[idmapping[socket.id]].angle = msg;
                 }
             }, 100);
         });
 
-        socket.on('speed', function(msg) {
+        socket.on('mouse', function(msg) {
+
+            if(msg == 'down'){
+                snakes[idmapping[socket.id]].speed = 8;
+            }else{
+                snakes[idmapping[socket.id]].speed = 5;
+            }
             //lag
             //setTimeout(function(){
-            console.log('speed Received from ', socket.id, ': ', msg);
-            snakes[idmapping[socket.id]].speed = msg;
+       //     console.log('speed Received from ', socket.id, ': ', msg);
+            
             //}, 100);
         });
+        socket.on('disconnect', function() {
+            var index = idmapping[socket.id]
+             snakes.splice(index,1)
+         delete idmapping[socket.id]
+         nextID -= 1
+           
+        });
+        
     }
 );
 

@@ -1,12 +1,23 @@
 <html>
 <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+
 <script src="/socket.io/socket.io.js"></script>
 </head>
 <body> 
-<canvas id="myCanvas" width="1000" height="400" style="border:1px solid #000000;"></canvas>
+    <div id="scoreboard">
+        <span id="id">Id: 0</span> - 
+        <span id="points">Points: 0</span>
+        <span id="coords">Coords: 0</span>
+    </div><br/>
+ 
+<canvas id="myCanvas"></canvas>
+
 <script>
 
       var canvas = document.getElementById('myCanvas');
+      canvas.width = $(window).width();
+      canvas.height = $(window).height();
       var context = canvas.getContext('2d');
       var canvas_width_center = (canvas.width/2);
       var canvas_height_center = (canvas.height/2);
@@ -26,25 +37,28 @@
           context.stroke();
       }
 
-      function drawCircles(xs,ys,ss){
+      function drawCircles(render){
         const pi2 = Math.PI * 2;
         var x = 0;
         var y = 0;
-        
-        context.fillStyle = 'green';
+    
+        for( var i=0; i < render.length; i++ ){
+    
+       context.fillStyle = render[i].color;
+    
         context.beginPath();
 
-        for( var i=0; i < xs.length; i++ ){
-            x = xs[i];
-            y = ys[i];
+
+            x = render[i].xs;
+            y = render[i].ys;
 
             context.moveTo( x, y );
-            context.arc( x, y, ss[i], 0, pi2,false);
-        }
-            
-        context.stroke();
+            context.arc( x, y, render[i].ss, 0, pi2,false);
+            context.stroke();
         context.fill();
       }
+    
+    }
       
       var myid = 0;
       var iosocket = io.connect();
@@ -63,21 +77,24 @@
             var border_right = centerX+canvas_width_center*zoom;
             var border_top = centerY-canvas_height_center*zoom;
             var border_bottom = centerY+canvas_height_center*zoom;
-            var xs = []
-            var ys = []
-            var ss = []
-            
+            var render = []
+           //  $("#points").text("Points: " + thisSnake.circles.length);
             //render snakes
             for(var s = 0; s < snakes.length; s++){
                 if(snakes[s]){
-                    var snake = snakes[s];
+                    var snake = snakes[s]
+            
                     for(var i = 0; i < snake.circles.length; i++){
+                        var xs,ys,ss;
                         dX = centerX - snake.circles[i][0];
                         dY = centerY - snake.circles[i][1];
                         //drawcircle(canvas_width_center + (1/zoom)*dX, canvas_height_center + (1/zoom)*dY, (1/zoom)*snake.size);
-                        xs.push(canvas_width_center + (1/zoom)*dX);
-                        ys.push(canvas_height_center + (1/zoom)*dY);
-                        ss.push((1/zoom)*snake.size);
+                       // color.push(snake.color)
+                       xs = canvas_width_center + (1/zoom)*dX
+                       ys = canvas_height_center + (1/zoom)*dY
+                       ss = (1/zoom)*snake.size
+                   render.push({color:snake.color,xs,ys,ss})
+                  // console.log(render)
                     }
                 }
             }
@@ -85,17 +102,24 @@
             //render food
             for(var f = 0; f < food.length; f++){
                 //only render visible food
+               // color = 'red'
+              
                 if(food[f][0] > border_left && food[f][0] < border_right && food[f][1] > border_top && food[f][1] < border_bottom){
+                    var xs,ys,ss
                     dX = centerX - food[f][0];
                     dY = centerY - food[f][1];
                     //drawcircle(canvas_width_center + (1/zoom)*dX, canvas_height_center + (1/zoom)*dY, (1/zoom)*food[f][2]);
-                    xs.push(canvas_width_center + (1/zoom)*dX);
-                    ys.push(canvas_height_center + (1/zoom)*dY);
-                    ss.push((1/zoom)*food[f][2]);
+                    //object.push(food)
+                   // color.push('black')
+                    xs = canvas_width_center + (1/zoom)*dX
+                    ys = canvas_height_center + (1/zoom)*dY
+                    ss = (1/zoom)*food[f][2]
+
+                   render.push({color:'red',xs,ys,ss})
                 }
             }
             
-            drawCircles(xs,ys,ss);
+            drawCircles(render);
         }
 
        //get input from server
@@ -104,6 +128,7 @@
         //get id
         iosocket.on('id', function(message) {
             console.log("asd" + message);
+            $("#id").text("Id: " + message);
             myid = message;
         });
         
@@ -127,19 +152,21 @@
       canvas.addEventListener('mousemove', function(e) {
         a = Math.atan2(e.clientY-(canvas.height/2),e.clientX-(canvas.width/2));
         iosocket.emit('angle', a);
-		console.log('angle',a)
+	//	console.log('angle',a)
       }, false);
       
       //send "go fast" to server
       canvas.addEventListener('mousedown', function(e) {
-        iosocket.emit('speed', 8);
+       iosocket.emit('mouse', 'down');
       }, false);
       
       //send "stop go fast" to server
       canvas.addEventListener('mouseup', function(e) {
-        iosocket.emit('speed', 5);
+        iosocket.emit('mouse', 'up');
       }, false);
-      
+
+
 </script>
+
 </body>
 </html>

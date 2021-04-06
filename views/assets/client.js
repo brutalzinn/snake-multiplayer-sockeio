@@ -11,7 +11,7 @@ function drawcircle(x,y,s){
     //clearCanvas();
     context.beginPath();
     context.arc(x,y, s, 0, 2 * Math.PI, false);
-    context.fillStyle = 'green';
+    context.fillStyle = 'pink';
     context.fill();
     context.lineWidth = 0;
     context.strokeStyle = '#003300';
@@ -23,7 +23,7 @@ function drawCircles(xs,ys,ss){
   var x = 0;
   var y = 0;
   
-  context.fillStyle = 'green';
+  context.fillStyle = 'pink';
   context.beginPath();
 
   for( var i=0; i < xs.length; i++ ){
