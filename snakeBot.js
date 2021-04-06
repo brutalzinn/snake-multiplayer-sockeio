@@ -11,6 +11,7 @@ class SnakeBot {
      
       this.speed = 5;
       this.color = 'pink'
+      this.name = _id
     }
   
     update = function(speed) {

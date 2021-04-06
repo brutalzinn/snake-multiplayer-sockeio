@@ -10,6 +10,7 @@ class Snake {
     this.angle = 0;
     this.speed = 5;
     this.color = 'pink'
+    this.name = _id
   }
 
   update = function(speed) {

@@ -207,6 +207,7 @@ io.on('connection',function(socket) {
                 }
              
              }
+          
              removeBot()
    
         });

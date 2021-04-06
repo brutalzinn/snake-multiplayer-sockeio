@@ -5,25 +5,72 @@
 <script src="/socket.io/socket.io.js"></script>
 </head>
 <body> 
-    <div id="scoreboard">
+    <style>
+    
+    #container {
+  position: relative;
+}
+#container canvas, #overlay {
+  position: absolute;
+}
+
+#myCanvas {
+            /* background-image: url('/assets/images/6.png')  */
+            background-color: grey;
+            
+            }
+  </style>
+  <div id="container">
+    <canvas id="myCanvas"></canvas>
+    <div id="overlay">
         <span id="id">Id: 0</span> - 
         <span id="points">Points: 0</span>
         <span id="coords">Coords: 0</span>
-    </div><br/>
- 
-<canvas id="myCanvas"></canvas>
+        <ul id="snakeboard">
+  
+
+        </ul>
+
+    </div>
+  </div>
+  <br/>
+
+
 
 <script>
 
       var canvas = document.getElementById('myCanvas');
-      canvas.width = $(window).width();
-      canvas.height = $(window).height();
+
       var context = canvas.getContext('2d');
       var canvas_width_center = (canvas.width/2);
-      var canvas_height_center = (canvas.height/2);
-      
+    var canvas_height_center = (canvas.height/2);
+      function resize(){    
+       
+        
+        canvas.width = $(window).width();
+      canvas.height = $(window).height();
+       canvas_width_center = (canvas.width/2);
+     canvas_height_center = (canvas.height/2);
+    }
+  
+   
+
+
+     
+
+  $(document).ready(function(){
+    resize();
+    $(window).on("resize", function(){       
+        window.location.reload();               
+        resize();
+    });
+  });
+  
       function clearCanvas(){
            context.clearRect(0, 0, canvas.width, canvas.height);
+//            var img1=new Image();
+// img1.src="/assets/images/6.png";
+// context.drawImage(img1,  0, 0,canvas.width, canvas.height);
       }
       
       function drawcircle(x,y,s){
@@ -66,6 +113,9 @@
 
       function render(state){
             clearCanvas();
+     
+
+
             var snakes = state[0];
             var food = state[1];
             var thisSnake = snakes[myid];
@@ -80,12 +130,14 @@
             var border_bottom = centerY+canvas_height_center*zoom;
             var render = []
  
-           //  $("#points").text("Points: " + thisSnake.circles.length);
+            
             //render snakes
             for(var s = 0; s < snakes.length; s++){
                 if(snakes[s]){
                     var snake = snakes[s]
-            
+                    
+                    
+
                     for(var i = 0; i < snake.circles.length; i++){
                         var xs,ys,ss;
                         dX = centerX - snake.circles[i][0];
@@ -99,6 +151,7 @@
                   // console.log(render)
                     }
                 }
+              
             }
             
             //render food
@@ -122,6 +175,7 @@
             }
             
             drawCircles(render);
+       
         }
 
        //get input from server
@@ -141,9 +195,17 @@
             if(snakes[myid] == null){
                 window.location.reload();
             }
+            updateScoreboard(snakes)
             render(o);
         });
-            
+            function updateScoreboard(snakes){
+               var scores = ''
+                for(var s = 0; s < snakes.length; s++){
+                   scores += `<li>${snakes.name}-${snakes.length}</li><br>`;
+                }
+              
+                $( "#snakeboard" ).html(scores)
+            }
         //disc
         iosocket.on('disconnect', function() {
             console.log("disc");
@@ -166,7 +228,8 @@
       canvas.addEventListener('mouseup', function(e) {
         iosocket.emit('mouse', 'up');
       }, false);
-
+      
+     
 
 </script>
 
