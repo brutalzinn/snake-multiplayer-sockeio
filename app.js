@@ -5,11 +5,11 @@ var server = require('http').Server(app);
 var io = require('socket.io')(server);
 
 var HOST = null;
-var PORT = process.env.PORT || 9000;
+var PORT = process.env.PORT || 8080;
 
 // start webserver
 app.use('/assets', express.static(__dirname + '/views/assets/'));
-
+require('./io')(io);
 app.get('/', function (req, res) {
   res.sendFile(__dirname + '/views/index.html');
 });
@@ -18,4 +18,3 @@ server.listen(PORT);
 console.log('server started');
 
 // start game server
-require('./io')(io);

@@ -1,163 +1,171 @@
 var Snake = require('./snake');
-var Food = require('./food');
-var Power = require('./power');
-var SnakeKey = require('./snake_key');
-var autoClient = 1;
-var snakes = [];
-var foods = []
-var powers = []
-var asyncThingsToDo = []
+
 module.exports = function(io) {
-  //var test = new Snake(123123);
-  //test.speed = 0
- // snakes.push(test);
-  io.on('connection', function(client) {
-    var clientId, clientSnake,clientSnakeKey;
-    
-    clientId = autoClient;
-    if(snakes.length > 1){
-      return
-    }
-    clientSnake = new Snake(clientId);
-   
-    clientSnakeKey = new SnakeKey(clientSnake)
-    autoClient += 1;
-
-    snakes.push(clientSnake);
-   
- 
-    console.log('someone connected (' + clientId + ')');
-    
-    client.emit('id', clientId);
   
-    client.on('direction', function(direction) {
-      clientSnake.direction = direction;
-    });
-    client.on('key', function(key) {
-      console.log(key)
-      clientSnakeKey.Effect(key)
-    });
+/////////////
+// Globals //
+/////////////
 
-    
-  
-    client.on('disconnect', function() {
-      snakes.remove(clientSnake);
-      asyncThingsToDo = []
-      console.log('someone disconnected (' + clientId + ')');
-    });
-  });
+// ID of next client
+var nextID = 0;
+// Mapping between socket id and nextID
+var idmapping = [];
 
+//////////
+// Food //
+//////////
 
-
-  function SnakeMovement(){
- 
-  var snake, _i, _len;
-  for (_i = 0, _len = snakes.length; _i < _len; _i++) {
-    snake = snakes[_i];
-    snake.doStep()
-    checkFood()
-    checkPower()
-    checkCollisions()
+var food = [];
+function create_food(minx, miny, maxx, maxy, size) {
+    var x = Math.floor(Math.random() * (maxx - minx + 1) + minx);
+    var y = Math.floor(Math.random() * (maxy - miny + 1) + miny);
+    food.push([x, y, size])
 }
 
+///////////
+// Snake //
+///////////
+
+var snakes = [];
+
+
+//////////
+// Game //
+//////////
+
+function game() {
+    var counter = 0;
+
+    function loop() {
+        counter++;
+        console.log("loop: " + counter);
+        update_snakes();
+        check_all_intersect();
+        create_food(0, 0, 1000, 1000, 4);
+
+
+        //send new state
+        io.sockets.emit('state', [snakes, food]);
+    }
+    var fps = 20;
+    setInterval(loop, 1000 / fps);
+    
+    function update_snakes() {
+        for (var i = 0; i < snakes.length; i++) {
+            if (snakes[i]) {
+                snakes[i].update(snakes[i].speed);
+            }
+        }
+    }
 }
 
-  function checkPower(){
-    var snake, _i, _len;
-    for (_i = 0, _len = snakes.length; _i < _len; _i++) {
+// helper function to game that handles all intersects
+function check_all_intersect() {
+    for (var i = 0; i < snakes.length; i++) {
+        if (snakes[i]) {
 
-      snake = snakes[_i];
-      for (f = 0; f < powers.length; f++) {
-        if(snake.head()[0] == powers[f].x && snake.head()[1] == powers[f].y){
-         // console.log(foods[f].type.nutrition)
-         console.log('geting',foods[f].type.name + ' POWER')
-         powers[f].type.setPower(snake)
-    powers.splice(f,1)
-        }
-      }
- 
-    }
-  }
-  function checkFood(){
-    var snake, _i, _len;
-    for (_i = 0, _len = snakes.length; _i < _len; _i++) {
+            //eat food & remove food
+            var food_intersects = check_intersect_food(i);
+            for (var f = 0; f < food_intersects.length; f++) {
+                snakes[i].length += 1;
+                snakes[i].size += 1 / snakes[i].length;
+                food.splice(food_intersects[f], 1);
+            }
 
-      snake = snakes[_i];
-      for (f = 0; f < foods.length; f++) {
-        if(snake.head()[0] == foods[f].x && snake.head()[1] == foods[f].y){
-         // console.log(foods[f].type.nutrition)
-         console.log('geting',foods[f].type.name)
-       snake.addLength(foods[f].type.nutrition)
-    snake.resetBody()
-foods.splice(f,1)
+            //die if collide with snake
+            if (intersect_snakes(i)) {
+                spawnFoodOnDeadSnake(i);
+                snakes[i] = null;
+            }
         }
-      }
- 
     }
-  }
-  function checkCollisions() {
-    var other, resetSnakes, snake, _i, _j, _k, _len, _len2, _len3, _results;
-    resetSnakes = [];
-    for (_i = 0, _len = snakes.length; _i < _len; _i++) {
-      snake = snakes[_i];
-      // if (snake.blocksSelf()) {
-      //   resetSnakes.push(snake);
-      // }
-   //   snake.addLength(2)
-      for (_j = 0, _len2 = snakes.length; _j < _len2; _j++) {
-        other = snakes[_j];
-        if (other !== snake) {
-          if (other.blocks(snake)) {
-            resetSnakes.push(snake);
-            other.addKill();
-          }
-        }
-      }
-    }
-    _results = [];
-    for (_k = 0, _len3 = resetSnakes.length; _k < _len3; _k++) {
-      snake = resetSnakes[_k];
-      _results.push(snake.reset());
-    }
-    return _results;
-  }
     
-  function generateItem() {
-  
-    //console.log('generate food')
-    var x = Math.floor((Math.random() * 48) + 1);
-    var y = Math.floor((Math.random() * 48) + 1);
+    function intersect(ax, ay, as, bx, by, bs) {
+        return (as + bs > Math.sqrt(Math.pow(ax - bx, 2) + Math.pow(ay - by, 2)));
+    }
     
-    return {x,y};
-  }
-  function getItem(){
- 
-  
-    var clientfood = new Food(generateItem().x,generateItem().y)
-    var clientPower = new Power(generateItem().x,generateItem().y)
-   // var PowerTest = new Power(25,25)
-   
-    if(powers.length < 1){
-    //  powers.push(PowerTest)
-     // powers.push(clientPower)
-    }
-    if(foods.length < 20){
-      foods.push(clientfood)
-    }
-var item = [...powers,...foods]
+    function check_intersect_food(s) {
+        var thisSnake = snakes[s];
+        var X = thisSnake.circles[thisSnake.circles.length - 1][0];
+        var Y = thisSnake.circles[thisSnake.circles.length - 1][1];
 
-io.emit('item', item);
-  }
-  
-  Array.prototype.remove = function(e) {
-    var t, _ref;
-    if ((t = this.indexOf(e)) > -1) {
-      return ([].splice.apply(this, [t, t - t + 1].concat(_ref = [])), _ref);
+        var intersects = [];
+        for (var f = 0; f < food.length; f++) {
+            if (intersect(X, Y, thisSnake.size, food[f][0], food[f][1], food[f][2])) {
+                intersects.push(f);
+            }
+        }
+        return intersects;
     }
-  };
-//var tickFood = setInterval(getItem, 100);
 
-var ticksnakeModel= setInterval(SnakeMovement, 100);
 
-var tick = setInterval(function () { io.emit('snakes', snakes)}, 100);
+    function intersect_snakes(s) {
+        var thisSnake = snakes[s];
+        var X = thisSnake.circles[thisSnake.circles.length - 1][0];
+        var Y = thisSnake.circles[thisSnake.circles.length - 1][1];
+
+        for (var i = 0; i < snakes.length; i++) {
+            if (snakes[i] && i != s) {
+                for (var c = 0; c < snakes[i].circles.length; c++) {
+                    if (intersect(X, Y, thisSnake.size, snakes[i].circles[c][0], snakes[i].circles[c][1], snakes[i].size)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    function spawnFoodOnDeadSnake(dead_snake_i) {
+        var dead_snake = snakes[dead_snake_i]
+        var cur_circle = dead_snake.circles[0]
+
+        for (var c = 0; c < dead_snake.circles.length; c++) {
+            cur_circle = dead_snake.circles[c];
+            for (var f = 0; f < dead_snake.size / 4; f++) {
+                create_food(cur_circle[0] - dead_snake.size, cur_circle[1] - dead_snake.size, cur_circle[0] + dead_snake.size, cur_circle[1] + dead_snake.size, dead_snake.size / 3);
+            }
+        }
+    }
+
 }
+
+////////////////////
+// Network events //
+////////////////////
+
+var g = false;
+io.on('connection',
+    function(socket) {
+
+        idmapping[socket.id] = nextID;
+        socket.emit('id', nextID);
+        nextID += 1;
+        snakes[idmapping[socket.id]] = new Snake(10, idmapping[socket.id] * 100, 30, 10);
+        if (!g) {
+            g = true;
+            game();
+        }
+
+        socket.on('angle', function(msg) {
+            //lag
+            setTimeout(function() {
+                if (snakes[idmapping[socket.id]]) {
+                    console.log('Message Received from ', socket.id, ': ', msg);
+                    snakes[idmapping[socket.id]].angle = msg;
+                }
+            }, 100);
+        });
+
+        socket.on('speed', function(msg) {
+            //lag
+            //setTimeout(function(){
+            console.log('speed Received from ', socket.id, ': ', msg);
+            snakes[idmapping[socket.id]].speed = msg;
+            //}, 100);
+        });
+    }
+);
+
+
+  }
