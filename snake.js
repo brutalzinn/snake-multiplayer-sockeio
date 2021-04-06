@@ -1,7 +1,7 @@
 class Snake {
-  constructor(_size, _x, _y, _length) {
+  constructor(_id,_size, _x, _y, _length) {
    
-  
+  this.id = _id
     this.size = _size;
     this.length = _length;
     this.headX = _x;
@@ -20,11 +20,6 @@ class Snake {
     }
     this.circles.push([this.headX, this.headY]);
 };
-
-
-
-
-
   
 }
 

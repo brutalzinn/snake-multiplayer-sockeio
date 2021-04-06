@@ -60,9 +60,10 @@
     
     }
       
-      var myid = 0;
-      var iosocket = io.connect();
-      
+      var myid = null;
+      var iosocket = io.connect(document.location.href);
+   
+
       function render(state){
             clearCanvas();
             var snakes = state[0];
@@ -78,6 +79,7 @@
             var border_top = centerY-canvas_height_center*zoom;
             var border_bottom = centerY+canvas_height_center*zoom;
             var render = []
+ 
            //  $("#points").text("Points: " + thisSnake.circles.length);
             //render snakes
             for(var s = 0; s < snakes.length; s++){

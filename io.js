@@ -1,5 +1,7 @@
 var Snake = require('./snake');
-
+var snakes = [];
+var clients = []
+var autoClient = 0;
 module.exports = function(io) {
   
 /////////////
@@ -7,9 +9,9 @@ module.exports = function(io) {
 /////////////
 
 // ID of next client
-var nextID = 0;
+
 // Mapping between socket id and nextID
-var idmapping = [];
+
 
 //////////
 // Food //
@@ -26,7 +28,7 @@ function create_food(minx, miny, maxx, maxy, size) {
 // Snake //
 ///////////
 
-var snakes = [];
+
 
 
 //////////
@@ -43,7 +45,7 @@ function game() {
         check_all_intersect();
         create_food(0, 0, 9000, 9000, 4);
 
-
+//console.log(snakes)
         //send new state
         io.sockets.emit('state', [snakes, food]);
     }
@@ -135,36 +137,41 @@ function check_all_intersect() {
 ////////////////////
 
 var g = false;
-io.on('connection',
-    function(socket) {
 
-        idmapping[socket.id] = nextID;
-        console.log(idmapping)
-        socket.emit('id', nextID);
-        nextID += 1;
-        snakes[idmapping[socket.id]] = new Snake(10, idmapping[socket.id] * 100, 30, 10);
 
+io.on('connection',function(socket) {
+        var clientId, clientSnake
+       
+        clientId = autoClient
+     
+            clientSnake = new Snake(clientId,10, clientId* 100, 30, 10);
+            snakes.push(clientSnake)
+          //  console.log(snakes.length,autoClient)
+            socket.emit('id', clientId)
+            autoClient++;
         if (!g) {
             g = true;
+          
             game();
         }
 
         socket.on('angle', function(msg) {
             //lag
             setTimeout(function() {
-                if (snakes[idmapping[socket.id]]) {
+                if (clientSnake) {
                    // console.log('Message Received from ', socket.id, ': ', msg);
-                    snakes[idmapping[socket.id]].angle = msg;
+                   clientSnake.angle = msg;
+             //       console.log(msg)
                 }
-            }, 100);
+            }, 50);
         });
 
         socket.on('mouse', function(msg) {
 
             if(msg == 'down'){
-                snakes[idmapping[socket.id]].speed = 8;
+               clientSnake.speed = 8;
             }else{
-                snakes[idmapping[socket.id]].speed = 5;
+               clientSnake.speed = 5;
             }
             //lag
             //setTimeout(function(){
@@ -173,15 +180,31 @@ io.on('connection',
             //}, 100);
         });
         socket.on('disconnect', function() {
-            var index = idmapping[socket.id]
-             snakes.splice(index,1)
-         delete idmapping[socket.id]
-         nextID -= 1
-           
+          //  console.log('disconnect', clientSnake)
+    //snakes.remove(clientSnake); 
+
+             console.log('someone disconnected (' + clientId + ')');
+             for(var i =0; i < snakes.length ;i++){
+                if(snakes[i] && snakes[i].id == clientId){
+                snakes.splice(i,1)
+                autoClient--
+                }
+             
+             }
+    
+   
         });
-        
+       
+       
     }
+    
 );
 
 
   }
+  Array.prototype.remove = function(e) {
+    var t, _ref;
+    if ((t = this.indexOf(e)) > -1) {
+      return ([].splice.apply(this, [t, t - t + 1].concat(_ref = [])), _ref);
+    }
+}
