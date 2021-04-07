@@ -1,12 +1,13 @@
-const Speed = require('./Powers/Speed')
+const Magnetic = require('./Powers/Magnetic')
 class Power{
-constructor(x,y){
-this.x = x
-this.y = y
+constructor(_x,_y,_size){
+this.x = _x
+this.y = _y
+this.size = _size
 this.type = this.getType()
 }
 getType(){
-var types = [new Speed()]
+var types = [new Magnetic()]
 var mytype = [Math.floor(Math.random()*types.length)]
 return types[mytype]
 }

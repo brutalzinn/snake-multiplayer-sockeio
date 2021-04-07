@@ -7,6 +7,7 @@ class Snake {
     this.headX = _x;
     this.headY = _y;
     this.circles = [];
+    this.powers = []
     this.angle = 0;
     this.speed = 5;
     this.color = 'pink'
@@ -23,6 +24,7 @@ class Snake {
     }
     this.circles.push([this.headX, this.headY]);
 };
+
   
 }
 

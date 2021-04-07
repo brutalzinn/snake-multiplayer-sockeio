@@ -13,6 +13,17 @@
 #container canvas, #overlay {
   position: absolute;
 }
+ #powers {
+  position: absolute;
+  position: absolute;
+margin-left: auto;
+margin-right: auto;
+left: 0;
+right: 0;
+text-align: center;
+ 
+
+}
 
 #myCanvas {
             /* background-image: url('/assets/images/6.png')  */
@@ -25,15 +36,11 @@
     <div id="overlay">
         <span id="id">Id: 0</span> - 
         <span id="kills">Kills: 0</span>
-
         <span id="points">Points: 0</span>
         <span id="coords">Coords: 0</span>
-        <ul id="snakeboard">
-  
-
-        </ul>
-
+        <ul id="snakeboard"></ul>
     </div>
+    <div id="powers"><image width="30px" height="30px" src="/assets/images/magnetic.png"><br>Tempo:6s</div>
   </div>
   <br/>
 
@@ -120,6 +127,7 @@
 
             var snakes = state[0];
             var food = state[1];
+            var power = state[2]
             var thisSnake = snakes[myid];
             var zoom = thisSnake.size/10;
             var centerX = thisSnake.circles[thisSnake.circles.length-1][0];
@@ -175,7 +183,26 @@
                    render.push({color:'red',xs,ys,ss})
                 }
             }
-            
+            for(var p = 0; p < power.length; p++){
+                //only render visible power
+               // color = 'red'
+              // console.log(power)
+           
+                if(power[p].x > border_left && power[p].x < border_right && power[p].y > border_top && power[p].y < border_bottom){
+                    var xs,ys,ss
+                    dX = centerX - power[p].x;
+                    dY = centerY - power[p].y;
+                    //drawcircle(canvas_width_center + (1/zoom)*dX, canvas_height_center + (1/zoom)*dY, (1/zoom)*power[p][2]);
+                    //object.push(power)
+                   // color.push('black')
+                    xs = canvas_width_center + (1/zoom)*dX
+                    ys = canvas_height_center + (1/zoom)*dY
+                    ss = (1/zoom)*power[p].size
+power[p].type.image ?   render.push({image:power[p].type.image,xs,ys,ss}) : render.push({color:power[p].type.color,xs,ys,ss})
+                 
+                }
+            }
+           
             drawCircles(render);
        
         }
