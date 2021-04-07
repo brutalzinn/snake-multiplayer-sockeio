@@ -125,7 +125,22 @@ function check_all_intersect() {
     function intersect(ax, ay, as, bx, by, bs) {
         return (as + bs > Math.sqrt(Math.pow(ax - bx, 2) + Math.pow(ay - by, 2)));
     }
-    
+    function check_snake_power(s){
+      
+        var thisSnake = snakes[s];
+        var X = thisSnake.circles[thisSnake.circles.length - 1][0];
+        var Y = thisSnake.circles[thisSnake.circles.length - 1][1];
+var r = thisSnake.size + 10
+
+       var dist =  Math.sqrt(Math.pow(X - Y, 2) + Math.pow(ay - by, 2))
+
+        r *= r;
+        if (dist_points < r) {
+            return true;
+        }
+        return false;
+
+    }
     function check_intersect_food(s) {
         var thisSnake = snakes[s];
         var X = thisSnake.circles[thisSnake.circles.length - 1][0];
