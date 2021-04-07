@@ -16,10 +16,7 @@ class Magnetic{
     getTime(){
         return 10
     }
-    getPower(){
-
-    }
-    setPower(snake){
+    setSnake(snake){
       snake.powers.push(this)
     }
     

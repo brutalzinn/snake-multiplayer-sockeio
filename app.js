@@ -5,7 +5,7 @@ var server = require('http').Server(app);
 var io = require('socket.io')(server);
 
 var HOST = null;
-var PORT = process.env.PORT || 8080;
+var PORT = process.env.PORT || 80;
 
 // start webserver
 app.use('/assets', express.static(__dirname + '/views/assets/'));

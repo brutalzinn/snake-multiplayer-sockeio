@@ -1,9 +1,9 @@
 var Snake = require('./snake');
 var SnakeBot = require('./snakeBot');
-var Power = require('./power')
+var Item = require('./item')
 var snakes = [];
 var clients = []
-var maxFood = 1
+var maxItem = 1
 var maxPower = 2
 var autoClient = 0;
 module.exports = function(io) {
@@ -21,26 +21,26 @@ module.exports = function(io) {
 // Food //
 //////////
 
-var food = [];
-var power = []
-function create_food(minx, miny, maxx, maxy, size) {
+var item = []
+function create_item(minx, miny, maxx, maxy, size,type) {
     var x = Math.floor(Math.random() * (maxx - minx + 1) + minx);
     var y = Math.floor(Math.random() * (maxy - miny + 1) + miny);
-    if(food.length < maxFood){
-        food.push([x, y, size])
+    var item_s = new Item(x,y,size)
+    if(item.length < maxItem){
+        item.push(item_s)
     }
   
 }
-function create_power(minx, miny, maxx, maxy, size) {
-    var x = Math.floor(Math.random() * (maxx - minx + 1) + minx);
-    var y = Math.floor(Math.random() * (maxy - miny + 1) + miny);
-var powers = new Power(x,y,size)
+// function create_power(minx, miny, maxx, maxy, size) {
+//     var x = Math.floor(Math.random() * (maxx - minx + 1) + minx);
+//     var y = Math.floor(Math.random() * (maxy - miny + 1) + miny);
+// var powers = new Power(x,y,size)
 
-    if(power.length < maxPower){
-        power.push(powers)
-    }
+//     if(power.length < maxPower){
+//         power.push(powers)
+//     }
   
-}
+// }
 
 ///////////
 // Snake //
@@ -61,13 +61,13 @@ function game() {
         //console.log("loop: " + counter);
         update_snakes();
         check_all_intersect();
-
-      create_food(0, 0, 100, 100, 4);
-        create_power(0, 0,100, 100, 8);
+        create_item(0, 0, 100, 100, 4);
+      //create_food(0, 0, 100, 100, 4);
+    //    create_power(0, 0,100, 100, 8);
 
 //console.log(snakes)
         //send new state
-        io.sockets.emit('state', [snakes, food, power]);
+        io.sockets.emit('state', [snakes, item]);
     }
     var fps = 30;
     setInterval(loop, 1000 / fps);
@@ -97,21 +97,13 @@ function check_all_intersect() {
         if (snakes[i]) {
 
             //eat food & remove food
-            var food_intersects = check_intersect_food(i);
-            for (var f = 0; f < food_intersects.length; f++) {
-                snakes[i].length += 1;
-                snakes[i].size += 1 / snakes[i].length;
-                food.splice(food_intersects[f], 1);
+            var item_intersection = check_intersect_item(i);
+            for (var f = 0; f < item_intersection.length; f++) {
+                //snakes[i].length += 1;
+               // snakes[i].size += 1 / snakes[i].length;
+               item_intersection[f].setSnake(snakes[i])
+                item.splice(item_intersection[f], 1);
             }
-            var power_intersects = check_intersect_power(i);
-            for (var f = 0; f < power_intersects.length; f++) {
-             //   snakes[i].length += 1;
-           //     snakes[i].size += 1 / snakes[i].length;
-           snakes[i].powers.push(power[f])
-                power.splice(power_intersects[f], 1);
-                console.log(snakes[i])
-            }
-
             //die if collide with snake
             if (intersect_snakes(i)) {
                 spawnFoodOnDeadSnake(i);
@@ -141,33 +133,20 @@ var r = thisSnake.size + 10
         return false;
 
     }
-    function check_intersect_food(s) {
+    function check_intersect_item(s) {
         var thisSnake = snakes[s];
         var X = thisSnake.circles[thisSnake.circles.length - 1][0];
         var Y = thisSnake.circles[thisSnake.circles.length - 1][1];
 
         var intersects = [];
-        for (var f = 0; f < food.length; f++) {
-            if (intersect(X, Y, thisSnake.size, food[f][0], food[f][1], food[f][2])) {
+        for (var f = 0; f < item.length; f++) {
+            if (intersect(X, Y, thisSnake.size, item[f][0], item[f][1], item[f][2])) {
                 intersects.push(f);
             }
         }
         return intersects;
     }
 
-    function check_intersect_power(s) {
-        var thisSnake = snakes[s];
-        var X = thisSnake.circles[thisSnake.circles.length - 1][0];
-        var Y = thisSnake.circles[thisSnake.circles.length - 1][1];
-
-        var intersects = [];
-        for (var f = 0; f < power.length; f++) {
-            if (intersect(X, Y, thisSnake.size, power[f].x, power[f].y, power[f].size)) {
-                intersects.push(f);
-            }
-        }
-        return intersects;
-    }
 
     function intersect_snakes(s) {
         var thisSnake = snakes[s];
