@@ -92,24 +92,32 @@ text-align: center;
           context.strokeStyle = '#003300';
           context.stroke();
       }
-
+function draw(path,dx,dy){
+  var img=new Image();
+img.src= path
+return context.drawImage(img, dx, dy, 30, 30)
+}
       function drawCircles(render){
         const pi2 = Math.PI * 2;
         var x = 0;
         var y = 0;
     
         for( var i=0; i < render.length; i++ ){
-    
-       context.fillStyle = render[i].color;
-   
+ //         context.fillStyle = render[i].color
+      render[i].image ? draw(render[i].image,render[i].xs,render[i].ys) : context.fillStyle = render[i].color
+
         context.beginPath();
 
 
             x = render[i].xs;
             y = render[i].ys;
 
-            context.moveTo( x, y );
-            context.arc( x, y, render[i].ss, 0, pi2,false);
+            
+            if(render[i].type != 'power'){
+              context.moveTo( x, y );
+              context.arc( x, y, render[i].ss, 0, pi2,false);
+
+            }
             context.stroke();
         context.fill();
       }
@@ -157,7 +165,7 @@ text-align: center;
                        xs = canvas_width_center + (1/zoom)*dX
                        ys = canvas_height_center + (1/zoom)*dY
                        ss = (1/zoom)*snake.size
-                   render.push({color:snake.color,xs,ys,ss})
+                   render.push({type:'snake',color:snake.color,xs,ys,ss})
                   // console.log(render)
                     }
                 }
@@ -180,7 +188,7 @@ text-align: center;
                     ys = canvas_height_center + (1/zoom)*dY
                     ss = (1/zoom)*food[f][2]
 
-                   render.push({color:'red',xs,ys,ss})
+                   render.push({type:'food',color:'red',xs,ys,ss})
                 }
             }
             for(var p = 0; p < power.length; p++){
@@ -198,7 +206,7 @@ text-align: center;
                     xs = canvas_width_center + (1/zoom)*dX
                     ys = canvas_height_center + (1/zoom)*dY
                     ss = (1/zoom)*power[p].size
-power[p].type.image ?   render.push({image:power[p].type.image,xs,ys,ss}) : render.push({color:power[p].type.color,xs,ys,ss})
+power[p].type.image ?   render.push({type:'power',image:power[p].type.image,xs,ys,ss}) : render.push({color:power[p].type.color,xs,ys,ss})
                  
                 }
             }
