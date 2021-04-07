@@ -63,7 +63,7 @@ function game() {
         check_all_intersect();
 
       create_food(0, 0, 100, 100, 4);
-        create_power(0, 0,1000, 1000, 8);
+        create_power(0, 0,100, 100, 8);
 
 //console.log(snakes)
         //send new state
