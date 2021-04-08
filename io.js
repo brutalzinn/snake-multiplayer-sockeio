@@ -50,7 +50,7 @@ function game() {
         update_snakes();
       check_all_intersect();
        if(item.length < maxItem){
-            create_item(0, 0, 1000, 1000, 10);
+            create_item(0, 0, 1000, 1000, 4);
       }
        
       //create_food(0, 0, 100, 100, 4);
@@ -91,10 +91,11 @@ function check_all_intersect() {
             //eat food & remove food
             var item_intersection = check_intersect_item(i);
             for (var f = 0; f < item_intersection.length; f++) {
-
+if( item[item_intersection[f]]){
                 item[item_intersection[f]].type.setSnake(snakes[i])
            
                 item.splice(item_intersection[f], 1);
+}
             }
             //die if collide with snake
             if (intersect_snakes(i)) {

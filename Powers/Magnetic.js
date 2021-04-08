@@ -17,25 +17,25 @@ class Magnetic{
         return 2
     }
     update(snake,item) {
-console.log(snake)
-      var X = snake.circles[snake.circles.length - 1][0];
-      var Y = snake.circles[snake.circles.length - 1][1];
-var r = snake.size + 100
- const raio = Math.PI * 2 * r
+//console.log(snake)
+
+
+ const raio = Math.PI  * r * 2
+ var zoom = snake.size/10;
+ var r = ((1/zoom)*snake.size ) + 100
+ console.log('raio',r)
  for(var i =0; i< item.length;i++){
-
+    var X = snake.circles[snake.circles.length - 1][0];
+    var Y = snake.circles[snake.circles.length - 1][1];
     var dist =  Math.sqrt(Math.pow(X - Y, 2) + Math.pow(item[i].x - item[i].y, 2))
-    console.log(item[i].type.name,dist,raio)
-    var newX 
-    var newY
 
-    if (dist < raio) {
-      
-    
-                
-//console.log('item próximo')
+    if (dist <= raio) {
+
+      item[i].x = X
+     item[i].y = Y 
+
     }else{
-  // console.log('item longe')
+
     }
 
 
