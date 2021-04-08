@@ -40,7 +40,7 @@ text-align: center;
         <span id="coords">Coords: 0</span>
         <ul id="snakeboard"></ul>
     </div>
-    <div id="powers"><image width="30px" height="30px" src="/assets/images/magnetic.png"><br>Tempo:6s</div>
+    <div id="powers"></div>
   </div>
   <br/>
 
@@ -70,7 +70,7 @@ text-align: center;
   $(document).ready(function(){
     resize();
     $(window).on("resize", function(){       
-        window.location.reload();               
+      //  window.location.reload();               
         resize();
     });
   });
@@ -216,6 +216,7 @@ return context.drawImage(img, dx, dy, 30, 30)
             if(snakes[myid] == null){
                 window.location.reload();
             }
+           
             updateScoreboard(snakes)
             render(o);
         });
@@ -223,14 +224,18 @@ return context.drawImage(img, dx, dy, 30, 30)
            
            
                var scores = ''
+               var powers = ''
 
-              
                $( "#kills" ).text(`Kills:${snakes[myid].kills}`)
-
                 for(var s = 0; s < snakes.length; s++){
                    scores += `<li>${snakes[s].name}-${snakes[s].length}</li><br>`;
                 }
-              
+                for(var p = 0; p < snakes[myid].powers.length;p++){
+                  console.log(snakes[myid].powers[p])
+  powers += `<image width="30px" height="30px" src="${snakes[myid].powers[p].image}"></image><br>Tempo:${snakes[myid].powers[p].time}`
+                }
+             
+              $("#powers").html(powers)
                 $( "#snakeboard" ).html(scores)
             }
         //disc
