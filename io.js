@@ -239,6 +239,12 @@ io.on('connection',function(socket) {
             }
          
         });
+        //power tasks
+        setInterval(()=>{
+            for(var i =0 ; i < clientSnake.powers.length; i++){
+                clientSnake.powers[i].time -= 1
+            }
+        },1000)
         socket.on('disconnect', function() {
           //  console.log('disconnect', clientSnake)
     //snakes.remove(clientSnake); 

@@ -3,6 +3,7 @@ class Magnetic{
     this.name = this.getName()
     this.color = this.getColor()
    this.image = this.getImage()
+   this.time = this.getTime()
     }
     getName(){
         return 'Magnetic'
@@ -14,72 +15,50 @@ class Magnetic{
         return '/assets/images/magnetic.png'
     }
     getTime(){
-        return 2
+        return 5
     }
     update(snake,item) {
 //console.log(snake)
 
 
- const raio = Math.PI  * r * 2
- var zoom = snake.size/10;
- var r = ((1/zoom)*snake.size ) + 100
- console.log('raio',r)
+
+ var raio = snake.size + 100;
+ //var raio = ((1/zoom)*snake.size ) + 100
+var inCircle = []
  for(var i =0; i< item.length;i++){
     var X = snake.circles[snake.circles.length - 1][0];
     var Y = snake.circles[snake.circles.length - 1][1];
-    var dist =  Math.sqrt(Math.pow(X - Y, 2) + Math.pow(item[i].x - item[i].y, 2))
-
-    if (dist <= raio) {
-
-      item[i].x = X
-     item[i].y = Y 
-
+    var dist =  Math.hypot(X-item[i].x , Y-item[i].y) ///Math.sqrt(Math.pow(X - Y, 2) + Math.pow(item[i].x - item[i].y, 2))
+    //console.log('raio',raio,'dist',dist)
+    if (dist < raio) {
+inCircle.push(item[i])
     }else{
 
     }
-
-
  }
+ for(var t = 0;t < inCircle.length;t++){
+            inCircle[t].x = X
+            inCircle[t].y = Y
+ }
+
   
 
     }
     setSnake(snake){
     // if(!snake.powers.includes(this)){
         var none = false
-var meuarray = snake.powers
-for(var i =0 ; i < meuarray.length; i++){
-if(meuarray[i].name == this.getName()){
-    //console.log('already have this item')
+for(var i =0 ; i < snake.powers.length; i++){
+if(snake.powers[i].name == this.getName()){
+    snake.powers[i].time += this.getTime()
 none = true
 }
 }
-  var time =  this.getTime() 
-
     if(!none){
-      //  console.log('add magnetic to snake!')
         snake.powers.push(this)
-        
-    }else{
-        time +=2
     }
-    
-  //   }
-   
-     
-//       var X = snake.circles[snake.circles.length - 1][0];
-//       var Y = snake.circles[snake.circles.length - 1][1];
-// var r = snake.size + 10
-// const raio = Math.PI * 2 * r
 
-//      var dist =  Math.sqrt(Math.pow(X - Y, 2) + Math.pow(ay - by, 2))
 
-    
-//       if (dist_points < r) {
-//        //   return true;
-//       }
-//       //return false;
-
-   // console.log(snake)
+ console.log(snake)
 
 }
     }

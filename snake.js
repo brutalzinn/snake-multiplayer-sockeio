@@ -25,8 +25,15 @@ class Snake {
     this.circles.push([this.headX, this.headY]);
 };
 power = function(item) {
+  
 for(var i =0;i < this.powers.length;i++){
   this.powers[i].update(this,item)
+  var poww = this.powers[i]
+  console.log('time',this.powers[i].time)
+  if(this.powers[i].time == 0){
+    this.powers.splice(i,1)
+    console.log('time out')
+  }
 }
 }
 
