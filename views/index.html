@@ -231,10 +231,8 @@ return context.drawImage(img, dx, dy, 30, 30)
                    scores += `<li>${snakes[s].name}-${snakes[s].length}</li><br>`;
                 }
                 for(var p = 0; p < snakes[myid].powers.length;p++){
-                  console.log(snakes[myid].powers[p])
   powers += `<image width="30px" height="30px" src="${snakes[myid].powers[p].image}"></image><br>Tempo:${snakes[myid].powers[p].time}`
                 }
-             
               $("#powers").html(powers)
                 $( "#snakeboard" ).html(scores)
             }
