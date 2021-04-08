@@ -1,35 +1,24 @@
 var Snake = require('./snake');
 var SnakeBot = require('./snakeBot');
-var Item = require('./item')
+var itemClass = require('./item')
 var snakes = [];
-var clients = []
-var maxItem = 1
-var maxPower = 2
+var item = []
+var maxItem = 100
 var autoClient = 0;
 module.exports = function(io) {
-  
-/////////////
-// Globals //
-/////////////
-
-// ID of next client
-
-// Mapping between socket id and nextID
 
 
-//////////
-// Food //
-//////////
 
-var item = []
-function create_item(minx, miny, maxx, maxy, size,type) {
+function create_item(minx, miny, maxx, maxy, size, type) {
     var x = Math.floor(Math.random() * (maxx - minx + 1) + minx);
     var y = Math.floor(Math.random() * (maxy - miny + 1) + miny);
-    var item_s = new Item(x,y,size)
-    if(item.length < maxItem){
+    var item_s = new itemClass(x,y,size)
+if(type){
+    item_s.setType(type)
+    //console.log('true')
+}
         item.push(item_s)
-    }
-  
+
 }
 // function create_power(minx, miny, maxx, maxy, size) {
 //     var x = Math.floor(Math.random() * (maxx - minx + 1) + minx);
@@ -55,13 +44,15 @@ function create_item(minx, miny, maxx, maxy, size,type) {
 
 function game() {
     var counter = 0;
-
     function loop() {
         counter++;
         //console.log("loop: " + counter);
         update_snakes();
-        check_all_intersect();
-        create_item(0, 0, 100, 100, 4);
+      check_all_intersect();
+       if(item.length < maxItem){
+            create_item(0, 0, 1000, 1000, 10);
+      }
+       
       //create_food(0, 0, 100, 100, 4);
     //    create_power(0, 0,100, 100, 8);
 
@@ -76,6 +67,7 @@ function game() {
         for (var i = 0; i < snakes.length; i++) {
             if (snakes[i]) {
                 snakes[i].update(snakes[i].speed);
+                snakes[i].power(item);
             }
         }
     }
@@ -99,9 +91,9 @@ function check_all_intersect() {
             //eat food & remove food
             var item_intersection = check_intersect_item(i);
             for (var f = 0; f < item_intersection.length; f++) {
-                //snakes[i].length += 1;
-               // snakes[i].size += 1 / snakes[i].length;
-               item_intersection[f].setSnake(snakes[i])
+
+                item[item_intersection[f]].type.setSnake(snakes[i])
+           
                 item.splice(item_intersection[f], 1);
             }
             //die if collide with snake
@@ -120,17 +112,7 @@ function check_all_intersect() {
     function check_snake_power(s){
       
         var thisSnake = snakes[s];
-        var X = thisSnake.circles[thisSnake.circles.length - 1][0];
-        var Y = thisSnake.circles[thisSnake.circles.length - 1][1];
-var r = thisSnake.size + 10
-
-       var dist =  Math.sqrt(Math.pow(X - Y, 2) + Math.pow(ay - by, 2))
-
-        r *= r;
-        if (dist_points < r) {
-            return true;
-        }
-        return false;
+      
 
     }
     function check_intersect_item(s) {
@@ -140,7 +122,7 @@ var r = thisSnake.size + 10
 
         var intersects = [];
         for (var f = 0; f < item.length; f++) {
-            if (intersect(X, Y, thisSnake.size, item[f][0], item[f][1], item[f][2])) {
+            if (intersect(X, Y, thisSnake.size, item[f].x, item[f].y, item[f].size)) {
                 intersects.push(f);
             }
         }
@@ -173,7 +155,7 @@ var r = thisSnake.size + 10
         for (var c = 0; c < dead_snake.circles.length; c++) {
             cur_circle = dead_snake.circles[c];
             for (var f = 0; f < dead_snake.size / 4; f++) {
-                create_food(cur_circle[0] - dead_snake.size, cur_circle[1] - dead_snake.size, cur_circle[0] + dead_snake.size, cur_circle[1] + dead_snake.size, dead_snake.size / 3);
+                create_item(cur_circle[0] - dead_snake.size, cur_circle[1] - dead_snake.size, cur_circle[0] + dead_snake.size, cur_circle[1] + dead_snake.size, dead_snake.size / 3,'food');
             }
         }
     }
@@ -211,7 +193,7 @@ io.on('connection',function(socket) {
        
         clientId = autoClient
        
-            clientSnake = new Snake(clientId,10, clientId* 100, 30, 50);
+            clientSnake = new Snake(clientId,10, 100 * clientId, 100, 50);
             clientSnake.name = 'robertocpaes'
             snakes.push(clientSnake)
           //  console.log(snakes.length,autoClient)
@@ -260,15 +242,17 @@ io.on('connection',function(socket) {
           //  console.log('disconnect', clientSnake)
     //snakes.remove(clientSnake); 
 
-             console.log('someone disconnected (' + clientId + ')');
+            // console.log('someone disconnected (' + clientId + ')');
+             //console.log(clientSnake)
              for(var i =0; i < snakes.length ;i++){
                 if(snakes[i] && snakes[i].id == clientId){
                 snakes.splice(i,1)
                 autoClient--
+             
                 }
              
              }
-          
+           //  console.log(item)
            //  removeBot()
    
         });

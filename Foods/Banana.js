@@ -8,12 +8,13 @@ getName(){
     return 'Banana'
 }
 getColor(){
-    return 'rgb(255,255,0)'
+    return 'yellow'
 }
 getImage(){
     return '/assets/images/banana.png'
 }
 setSnake(snake){
+  //  console.log('eating bananaa...')
     snake.length += 1;
     snake.size += 1 / snake.length;
   }

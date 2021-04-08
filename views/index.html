@@ -101,11 +101,11 @@ return context.drawImage(img, dx, dy, 30, 30)
         const pi2 = Math.PI * 2;
         var x = 0;
         var y = 0;
-    
+
         for( var i=0; i < render.length; i++ ){
  //         context.fillStyle = render[i].color
       render[i].image ? draw(render[i].image,render[i].xs,render[i].ys) : context.fillStyle = render[i].color
-
+    
         context.beginPath();
 
 
@@ -116,8 +116,6 @@ return context.drawImage(img, dx, dy, 30, 30)
             if(render[i].type != 'item'){
               context.moveTo( x, y );
               context.arc( x, y, render[i].ss, 0, pi2,false);
-              
-
             }
             context.stroke();
         context.fill();
@@ -173,22 +171,26 @@ return context.drawImage(img, dx, dy, 30, 30)
             }
             
             //render food
-            for(var f = 0; f < food.length; f++){
+            for(var f = 0; f < item.length; f++){
                 //only render visible food
                // color = 'red'
-              
-                if(item[f][0] > border_left && item[f][0] < border_right && item[f][1] > border_top && item[f][1] < border_bottom){
+              //console.log(item[f])
+                if(item[f].x > border_left && item[f].x < border_right && item[f].y > border_top && item[f].y< border_bottom){
                     var xs,ys,ss
-                    dX = centerX - item[f][0];
-                    dY = centerY - item[f][1];
+                    dX = centerX - item[f].x;
+                    dY = centerY - item[f].y;
                     //drawcircle(canvas_width_center + (1/zoom)*dX, canvas_height_center + (1/zoom)*dY, (1/zoom)*item[f][2]);
                     //object.push(item)
                    // color.push('black')
+         
                     xs = canvas_width_center + (1/zoom)*dX
                     ys = canvas_height_center + (1/zoom)*dY
-                    ss = (1/zoom)*item[f][2]
-
-                   render.push({type:'item',color:'red',xs,ys,ss})
+                    ss = (1/zoom)*item[f].size
+          if(item[f].type){
+              //   return
+              item[f].type.image ?   render.push({type:'item',image:item[f].type.image,xs,ys,ss}) : render.push({color:item[f].type.color,xs,ys,ss})
+          }
+            //       render.push({type:'item',color:'black',xs,ys,ss})
                 }
             }
          

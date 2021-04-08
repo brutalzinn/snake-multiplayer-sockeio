@@ -24,6 +24,12 @@ class Snake {
     }
     this.circles.push([this.headX, this.headY]);
 };
+power = function(item) {
+for(var i =0;i < this.powers.length;i++){
+  this.powers[i].update(this,item)
+}
+}
+
 
   
 }
