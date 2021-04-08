@@ -4,6 +4,7 @@ class Magnetic{
     this.color = this.getColor()
    this.image = this.getImage()
    this.time = this.getTime()
+   this.items = []
     }
     getName(){
         return 'Magnetic'
@@ -17,32 +18,58 @@ class Magnetic{
     getTime(){
         return 5
     }
+    quadrant(x,y){
+
+        if (x > 0 && y > 0)
+        console.log("lies in First quadrant");
+
+    else if (x < 0 && y > 0)
+        console.log("lies in Second quadrant");
+
+    else if (x < 0 && y < 0)
+        console.log("lies in Third quadrant");
+
+    else if (x > 0 && y < 0)
+        console.log("lies in Fourth quadrant");
+
+    else if (x == 0 && y > 0)
+        console.log("lies at positive y axis");
+
+    else if (x == 0 && y < 0)
+        console.log("lies at negative y axis");
+
+    else if (y == 0 && x < 0)
+        console.log("lies at negative x axis");
+
+    else if (y == 0 && x > 0)
+        console.log("lies at positive x axis");
+
+    else
+        console.log("lies at origin");
+    }
+   getItems(item,snake){
+console.log('poistion items..')
+if(item[0] != snake[0] && snake[1] != item[1]){
+    this.quadrant(item[0],item[1])
+}
+return [item[0],item[1]]
+}
     update(snake,item) {
-//console.log(snake)
 
-
-
- var raio = snake.size + 100;
- //var raio = ((1/zoom)*snake.size ) + 100
-var inCircle = []
+ setTimeout(()=>{
+    var raio = snake.size + 100;
  for(var i =0; i< item.length;i++){
     var X = snake.circles[snake.circles.length - 1][0];
     var Y = snake.circles[snake.circles.length - 1][1];
-    var dist =  Math.hypot(X-item[i].x , Y-item[i].y) ///Math.sqrt(Math.pow(X - Y, 2) + Math.pow(item[i].x - item[i].y, 2))
-    //console.log('raio',raio,'dist',dist)
+    var dist =  Math.hypot(X-item[i].x , Y-item[i].y)
+    
     if (dist < raio) {
-inCircle.push(item[i])
-    }else{
-
+      
+            item[i].x =  this.getItems([item[i].x,item[i].y],[X,Y])[0]
+            item[i].y =  this.getItems([item[i].x,item[i].y],[X,Y])[1]
     }
  }
- for(var t = 0;t < inCircle.length;t++){
-            inCircle[t].x = X
-            inCircle[t].y = Y
- }
-
-  
-
+},2000)
     }
     setSnake(snake){
     // if(!snake.powers.includes(this)){
@@ -56,8 +83,6 @@ none = true
     if(!none){
         snake.powers.push(this)
     }
-
-
  console.log(snake)
 
 }
