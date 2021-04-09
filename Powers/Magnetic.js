@@ -18,41 +18,35 @@ class Magnetic{
     getTime(){
         return 5
     }
-    quadrant(x,y){
+    quadrant(item,snake){
 
-        if (x > 0 && y > 0)
-        console.log("lies in First quadrant");
+        if (item[0] < snake[0] && item[1] > snake[1]){
+            item[0] += 1
+            item[1] -=1 
+        }
+    
+    else if (item[0] > snake[0] && item[1] > snake[1]){
+        item[0] -= 1
+        item[1] -=1 
 
-    else if (x < 0 && y > 0)
-        console.log("lies in Second quadrant");
-
-    else if (x < 0 && y < 0)
-        console.log("lies in Third quadrant");
-
-    else if (x > 0 && y < 0)
-        console.log("lies in Fourth quadrant");
-
-    else if (x == 0 && y > 0)
-        console.log("lies at positive y axis");
-
-    else if (x == 0 && y < 0)
-        console.log("lies at negative y axis");
-
-    else if (y == 0 && x < 0)
-        console.log("lies at negative x axis");
-
-    else if (y == 0 && x > 0)
-        console.log("lies at positive x axis");
-
-    else
-        console.log("lies at origin");
+    }
+    else if (item[0] < snake[0] && item[1] < snake[1]){
+        item[0] += 1
+        item[1] +=1 
+    }
+        else if (item[0] > snake[0] && item[1] < snake[1]){
+            item[0] -= 1
+            item[1] +=1 
+        }
+   
+return [item[0],item[1]]
+   
     }
    getItems(item,snake){
-console.log('poistion items..')
 if(item[0] != snake[0] && snake[1] != item[1]){
-    this.quadrant(item[0],item[1])
+   return this.quadrant([item[0],item[1]],snake)
 }
-return [item[0],item[1]]
+
 }
     update(snake,item) {
 
