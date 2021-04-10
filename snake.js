@@ -14,7 +14,6 @@ class Snake {
     this.name = _id
     this.kills = 0
     this.deaths = 0
-    this.client =  this.powerClient()
   }
 
   update = function(speed) {

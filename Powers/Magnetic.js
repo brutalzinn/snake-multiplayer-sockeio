@@ -53,20 +53,7 @@ if(item[0] != snake[0] && snake[1] != item[1]){
 
 }
 
- 
-    var raio = snake.size + 100;
- for(var i =0; i< item.length;i++){
-    var X = snake.circles[snake.circles.length - 1][0];
-    var Y = snake.circles[snake.circles.length - 1][1];
-    var dist =  Math.hypot(X-item[i].x , Y-item[i].y)
-    
-    if (dist < raio) {
-      
-            item[i].x =  this.getItems([item[i].x,item[i].y],[X,Y])[0]
-            item[i].y =  this.getItems([item[i].x,item[i].y],[X,Y])[1]
-    }
- }
-    }
+
 
     client = "var raio = snake.size + 100 \n" +
     "for(var i =0; i< item.length;i++){ \n" +
