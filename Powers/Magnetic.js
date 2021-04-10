@@ -18,8 +18,10 @@ class Magnetic{
     getTime(){
         return 5
     }
-    quadrant(item,snake){
 
+
+    quadrant(item,snake){
+//verifica em qual quadrante o item está
         if (item[0] < snake[0] && item[1] > snake[1]){
             item[0] += 1
             item[1] -=1 
@@ -48,9 +50,11 @@ if(item[0] != snake[0] && snake[1] != item[1]){
 }
 
 }
-    update(snake,item) {
 
- setTimeout(()=>{
+
+server(snake,item) {
+
+ 
     var raio = snake.size + 100;
  for(var i =0; i< item.length;i++){
     var X = snake.circles[snake.circles.length - 1][0];
@@ -63,7 +67,25 @@ if(item[0] != snake[0] && snake[1] != item[1]){
             item[i].y =  this.getItems([item[i].x,item[i].y],[X,Y])[1]
     }
  }
-},2000)
+
+    }
+
+    client(snake,item) {
+
+ 
+    var raio = snake.size + 100;
+ for(var i =0; i< item.length;i++){
+    var X = snake.circles[snake.circles.length - 1][0];
+    var Y = snake.circles[snake.circles.length - 1][1];
+    var dist =  Math.hypot(X-item[i].x , Y-item[i].y)
+    
+    if (dist < raio) {
+      
+            item[i].x =  this.getItems([item[i].x,item[i].y],[X,Y])[0]
+            item[i].y =  this.getItems([item[i].x,item[i].y],[X,Y])[1]
+    }
+ }
+ console.log('snake executando pelo backend')
     }
     setSnake(snake){
     // if(!snake.powers.includes(this)){

@@ -14,6 +14,7 @@ class Snake {
     this.name = _id
     this.kills = 0
     this.deaths = 0
+    this.client =  this.powerClient()
   }
 
   update = function(speed) {
@@ -24,11 +25,9 @@ class Snake {
     }
     this.circles.push([this.headX, this.headY]);
 };
-power = function(item) {
-  
+powerServer = function(item) {
 for(var i =0;i < this.powers.length;i++){
-  this.powers[i].update(this,item)
-  var poww = this.powers[i]
+  this.powers[i].server(this,item)
   console.log('time',this.powers[i].time)
   if(this.powers[i].time == 0){
     this.powers.splice(i,1)
@@ -36,7 +35,14 @@ for(var i =0;i < this.powers.length;i++){
   }
 }
 }
-
+Snake.client = function() {
+  console.log(this.myMeow);
+}
+powerClient = function(item) {
+  for(var i =0;i < this.powers.length;i++){
+    this.powers[i].client(this,item)
+  }
+  }
 
   
 }

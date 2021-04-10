@@ -163,6 +163,8 @@ return context.drawImage(img, dx, dy, 30, 30)
                        xs = canvas_width_center + (1/zoom)*dX
                        ys = canvas_height_center + (1/zoom)*dY
                        ss = (1/zoom)*snake.size
+
+
                    render.push({type:'snake',color:snake.color,xs,ys,ss})
                   // console.log(render)
                     }
@@ -182,12 +184,14 @@ return context.drawImage(img, dx, dy, 30, 30)
                     //drawcircle(canvas_width_center + (1/zoom)*dX, canvas_height_center + (1/zoom)*dY, (1/zoom)*item[f][2]);
                     //object.push(item)
                    // color.push('black')
-         
+       
                     xs = canvas_width_center + (1/zoom)*dX
                     ys = canvas_height_center + (1/zoom)*dY
                     ss = (1/zoom)*item[f].size
           if(item[f].type){
               //   return
+        
+           console.log(thisSnake.powerClient)
               item[f].type.image ?   render.push({type:'item',image:item[f].type.image,xs,ys,ss}) : render.push({color:item[f].type.color,xs,ys,ss})
           }
             //       render.push({type:'item',color:'black',xs,ys,ss})

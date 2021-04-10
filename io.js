@@ -67,7 +67,7 @@ function game() {
         for (var i = 0; i < snakes.length; i++) {
             if (snakes[i]) {
                 snakes[i].update(snakes[i].speed);
-                snakes[i].power(item);
+                snakes[i].powerServer(item);
             }
         }
     }
