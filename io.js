@@ -243,6 +243,8 @@ io.on('connection',function(socket) {
         setInterval(()=>{
             for(var i =0 ; i < clientSnake.powers.length; i++){
                 clientSnake.powers[i].time -= 1
+                io.sockets.emit('power', {"function": {"arguments": clientSnake.powers[i].clientArgs,"body":clientSnake.powers[i].function}}); //{"function": {"arguments":"snake,item","body":"console.log('test',snake,item)"}});
+              //  clientSnake.powers[i].funciontest= {function(){console.log('teste')}}
             }
         },1000)
         socket.on('disconnect', function() {
