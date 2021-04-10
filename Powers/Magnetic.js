@@ -5,6 +5,8 @@ class Magnetic{
    this.image = this.getImage()
    this.time = this.getTime()
    this.items = []
+   this.clientArgs = 'snake,item'
+   this.function = this.client
     }
     getName(){
         return 'Magnetic'
@@ -51,9 +53,6 @@ if(item[0] != snake[0] && snake[1] != item[1]){
 
 }
 
-
-server(snake,item) {
-
  
     var raio = snake.size + 100;
  for(var i =0; i< item.length;i++){
@@ -67,26 +66,17 @@ server(snake,item) {
             item[i].y =  this.getItems([item[i].x,item[i].y],[X,Y])[1]
     }
  }
-
     }
 
-    client(snake,item) {
-
- 
-    var raio = snake.size + 100;
- for(var i =0; i< item.length;i++){
-    var X = snake.circles[snake.circles.length - 1][0];
-    var Y = snake.circles[snake.circles.length - 1][1];
-    var dist =  Math.hypot(X-item[i].x , Y-item[i].y)
-    
-    if (dist < raio) {
-      
-            item[i].x =  this.getItems([item[i].x,item[i].y],[X,Y])[0]
-            item[i].y =  this.getItems([item[i].x,item[i].y],[X,Y])[1]
-    }
- }
- console.log('snake executando pelo backend')
-    }
+    client = "var raio = snake.size + 100 \n" +
+    "for(var i =0; i< item.length;i++){ \n" +
+    "var X = snake.circles[snake.circles.length - 1][0]; \n" +
+    "var Y = snake.circles[snake.circles.length - 1][1]; \n" +
+       "var dist =  Math.hypot(X-item[i].x , Y-item[i].y) \n" +
+       "if (dist < raio) { \n" +
+       "return [item[i].x,item[i].y] \n" + 
+       "} \n" + 
+       "} "
     setSnake(snake){
     // if(!snake.powers.includes(this)){
         var none = false

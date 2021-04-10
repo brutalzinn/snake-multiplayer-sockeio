@@ -125,16 +125,16 @@ return context.drawImage(img, dx, dy, 30, 30)
       
       var myid = null;
       var iosocket = io.connect(document.location.href);
-   
-
+   var thisSnake = null
+   var item = null
       function render(state){
             clearCanvas();
      
 
 
             var snakes = state[0];
-            var item = state[1];
-            var thisSnake = snakes[myid];
+             item = state[1];
+             thisSnake = snakes[myid];
             var zoom = thisSnake.size/10;
             var centerX = thisSnake.circles[thisSnake.circles.length-1][0];
             var centerY = thisSnake.circles[thisSnake.circles.length-1][1];
@@ -229,7 +229,7 @@ return context.drawImage(img, dx, dy, 30, 30)
            
                var scores = ''
                var powers = ''
-
+//console.log(snakes[myid])
                $( "#kills" ).text(`Kills:${snakes[myid].kills}`)
                 for(var s = 0; s < snakes.length; s++){
                    scores += `<li>${snakes[s].name}-${snakes[s].length}</li><br>`;
@@ -243,6 +243,13 @@ return context.drawImage(img, dx, dy, 30, 30)
         //disc
         iosocket.on('disconnect', function() {
             console.log("disc");
+        });
+
+        iosocket.on('power', function(power) {
+           console.log('function received',power);
+          
+            var f = new Function(power.function.arguments, power.function.body)
+        console.log(f(thisSnake,item))
         });
       });
 
