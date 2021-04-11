@@ -24,24 +24,16 @@ class Snake {
     }
     this.circles.push([this.headX, this.headY]);
 };
-powerServer = function(item) {
+powerServer = function(item,event) {
 for(var i =0;i < this.powers.length;i++){
-  this.powers[i].server(this,item)
-  console.log('time',this.powers[i].time)
+  this.powers[i].update(item)
   if(this.powers[i].time == 0){
+    event.emit('scream', null,null);
     this.powers.splice(i,1)
-    console.log('time out')
   }
 }
 }
-Snake.client = function() {
-  console.log(this.myMeow);
-}
-powerClient = function(item) {
-  for(var i =0;i < this.powers.length;i++){
-    this.powers[i].client(this,item)
-  }
-  }
+
 
   
 }

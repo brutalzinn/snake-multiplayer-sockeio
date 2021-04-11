@@ -1,6 +1,8 @@
 var Snake = require('./snake');
 var SnakeBot = require('./snakeBot');
 var itemClass = require('./item')
+var events = require('events');
+var eventEmitter = new events.EventEmitter();
 var snakes = [];
 var item = []
 var maxItem = 100
@@ -67,7 +69,7 @@ function game() {
         for (var i = 0; i < snakes.length; i++) {
             if (snakes[i]) {
                 snakes[i].update(snakes[i].speed);
-                snakes[i].powerServer(item);
+              snakes[i].powerServer(item,eventEmitter);
             }
         }
     }
@@ -92,7 +94,7 @@ function check_all_intersect() {
             var item_intersection = check_intersect_item(i);
             for (var f = 0; f < item_intersection.length; f++) {
 if( item[item_intersection[f]]){
-                item[item_intersection[f]].type.setSnake(snakes[i])
+                item[item_intersection[f]].type.setSnake(snakes[i],eventEmitter)
            
                 item.splice(item_intersection[f], 1);
 }
@@ -206,14 +208,16 @@ io.on('connection',function(socket) {
           //  createBot()
             game();
         }
-      
+        socket.on('PowerServer', function(power) {
+            for(var i =0 ; i < clientSnake.powers.length; i++){
+                clientSnake.powers[i].clientHandler(power,clientSnake)
+            }
+        });
         socket.on('angle', function(msg) {
             //lag
             setTimeout(function() {
                 if (clientSnake) {
-                   // console.log('Message Received from ', socket.id, ': ', msg);
                    clientSnake.angle = msg;
-             //       console.log(msg)
                 }
             }, 50);
         });
@@ -240,10 +244,14 @@ io.on('connection',function(socket) {
          
         });
         //power tasks
+
+        eventEmitter.on('scream', ((clientArgs,functions) => {
+ io.sockets.emit('powerClient', {"function": {"arguments": clientArgs,"body":functions}}); //{"function": {"arguments":"snake,item","body":"console.log('test',snake,item)"}});
+        }));
+
         setInterval(()=>{
             for(var i =0 ; i < clientSnake.powers.length; i++){
                 clientSnake.powers[i].time -= 1
-                io.sockets.emit('power', {"function": {"arguments": clientSnake.powers[i].clientArgs,"body":clientSnake.powers[i].function}}); //{"function": {"arguments":"snake,item","body":"console.log('test',snake,item)"}});
               //  clientSnake.powers[i].funciontest= {function(){console.log('teste')}}
             }
         },1000)
