@@ -1,0 +1,14 @@
+version: "3.0"
+services:
+  server:
+    build: .
+    command: >
+      sh -c "npm install && npm start"
+    container_name: snake
+    ports:
+      - 8080:8080
+    restart: always 
+    tty: true
+    stdin_open: true   
+    volumes:
+      - ./:/home/node/app
